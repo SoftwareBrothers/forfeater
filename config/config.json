@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "forfeater",
+    "password": "forfeater",
+    "database": "forfeater",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "forfeater",
+    "password": "forfeater",
+    "database": "forfeater",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "forfeater",
+    "password": "forfeater",
+    "database": "forfeater",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}

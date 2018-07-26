@@ -1,0 +1,1 @@
+alert("no i chuj no i cześć")
