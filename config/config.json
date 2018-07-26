@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "forfeater",
-    "password": "forfeater",
-    "database": "forfeater",
+    "password": "secret",
+    "database": "forfeaterjs",
     "host": "localhost",
     "port": 5432,
     "dialect": "postgres"

@@ -4,6 +4,7 @@ var Product = require('../models/product');
 
 async = require('async');
 
+
 exports.initialize = function (req, res) {
 
     async.waterfall([

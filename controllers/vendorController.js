@@ -1,22 +1,20 @@
-var Vendor = require('../models/vendor');
+var db = require('../models');
+var Vendor = db.vendor;
 
 exports.vendor_list = function (req, res) {
 
-    Vendor
-        .findAll()
-        .then(result => {
-            res.json(result);
-        });
+    Vendor.findAll().then(vendors => {
+        res.json(vendors);
+    })
 
 };
 
-exports.vendor_details = function (req, res) {
+exports.vendor_show = function (req, res) {
 
     Vendor.findById(req.params.id).then(vendor => {
         res.json(vendor);
     })
 
-    // res.send("vendor deteils: " + req.params.id);
 };
 
 exports.vendor_create_form = function (req, res) {
