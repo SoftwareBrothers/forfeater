@@ -2,10 +2,10 @@
 module.exports = (sequelize, DataTypes) => {
   var product = sequelize.define('product', {
     name: DataTypes.STRING,
-    vendor_id: DataTypes.INTEGER
+    vendorId: DataTypes.INTEGER
   }, {});
   product.associate = function(models) {
-    // associations can be defined here
+    product.belongsTo(models.vendor)
   };
   return product;
 };

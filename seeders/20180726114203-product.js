@@ -6,17 +6,17 @@ module.exports = {
 
       return queryInterface.bulkInsert('products', [{
           name: 'Frytki',
-          vendor_id: 1,
+          vendorId: 1,
           createdAt: new Date(),
           updatedAt: new Date()
       },{
           name: 'Kurczak',
-          vendor_id: 1,
+          vendorId: 1,
           createdAt: new Date(),
           updatedAt: new Date()
       },{
           name: 'Bebek Burger',
-          vendor_id: 2,
+          vendorId: 2,
           createdAt: new Date(),
           updatedAt: new Date()
       }], {});
