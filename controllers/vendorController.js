@@ -1,8 +1,8 @@
-var db = require('../models');
-var Vendor = db.vendor;
-
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+
+var db = require('../models');
+var Vendor = db.vendor;
 
 exports.list = function (req, res) {
     Vendor.findAll().then(vendors => {
@@ -16,15 +16,6 @@ exports.show = function (req, res) {
     })
 };
 
-// exports.create = function (req, res) {
-//     res.send("vendor create form");
-// };
-
-// exports.store = function (req, res) {
-//     res.send("vendor create action (post)");
-// };
-
-// Handle Genre create on POST.
 exports.store =  [
    
     // Validate that the name field is not empty.
@@ -32,7 +23,7 @@ exports.store =  [
 
     // Sanitize (trim and escape) the name field.
     sanitizeBody('name').trim().escape(),
-    sanitizeBody('url').trim().escape(),
+    sanitizeBody('url').trim(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -42,35 +33,23 @@ exports.store =  [
 
         // Create a genre object with escaped and trimmed data.
         var vendor = new Vendor(
-          { name: req.body.name },
-          { url: req.body.url }
+          { name: req.body.name, url: req.body.url }
         );
 
         if (!errors.isEmpty()) {
-            // There are errors. Render the form again with sanitized values/error messages.
-            // res.render('genre_form', { title: 'Create Genre', genre: genre, errors: errors.array()});
-            res.json({errors: errors.array(), body: req.body});
-        return;
+            res.status(422).json({status: 'fail', errors: errors.array()});
         }
         else {
-            // Data from form is valid.
-            // Check if Genre with same name already exists.
-            Vendor.findOne({ 'name': req.body.name })
-                .exec( function(err, found_vendor) {
-                     if (err) { return next(err); }
-
+        
+            Vendor.findOne({ where: {'name': req.body.name }})
+                .then( found_vendor => { 
                      if (found_vendor) {
-                         // Genre exists, redirect to its detail page.
-                         res.json('exists!');
+                         res.status(409).json({status: 'fail', data: 'Vendor already exists!'});
                      }
                      else {
-
-                         vendor.save(function (err) {
-                           if (err) { return next(err); }
-                           // Genre saved. Redirect to genre detail page.
-                           res.json('success');
-                         });
-
+                        vendor.save().then(() => {
+                            res.status(200).json({status: 'success'});
+                        })
                      }
 
                  });
