@@ -10,13 +10,30 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       orderId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'orders',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       productId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,references: {
+          model: 'products',
+          key: 'id'
+        },
+        onUpdate: 'cascade',
+        onDelete: 'cascade'
       },
       score: {
         type: Sequelize.INTEGER

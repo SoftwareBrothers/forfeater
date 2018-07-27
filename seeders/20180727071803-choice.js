@@ -5,6 +5,7 @@ module.exports = {
     return queryInterface.bulkInsert('choices', [{
       orderId: 1,
       userId: 1,
+      productId: 1,
       score: 5,
       comment: 'Delicious!',
       createdAt: new Date(),
@@ -12,6 +13,7 @@ module.exports = {
   },{
     orderId: 1,
     userId: 2,
+    productId: 1,
     score: 6,
     comment: 'It was fine.',
     createdAt: new Date(),
@@ -19,6 +21,7 @@ module.exports = {
   },{
     orderId: 2,
     userId: 1,
+    productId: 1,
     score: 6,
     comment: 'ok....',
     createdAt: new Date(),
