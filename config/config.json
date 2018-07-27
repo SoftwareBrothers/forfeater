@@ -1,6 +1,6 @@
 {
   "development": {
-    "use_env_variable": true,
+    "use_env_variable": false,
     "username": "forfeater",
     "password": "secret",
     "database": "forfeaterjs",
