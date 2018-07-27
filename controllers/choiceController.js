@@ -13,6 +13,15 @@ exports.list = function (req, res) {
     })
 };
 
+exports.listOfOrder = function (req, res) {
+    Choice.findAll({ 
+        include: [ Order, User, Product ],
+        where: { orderId: req.params.orderId } 
+    }).then(choices => {
+        res.json(choices);
+    })
+};
+
 exports.show = function (req, res) {
     Choice.findById(req.params.id, { include: [ Order, User, Product ] }).then(product => {
         res.json(product);
