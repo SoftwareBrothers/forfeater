@@ -47,9 +47,14 @@ exports.store =  [
                          res.status(409).json({status: 'fail', data: 'Vendor already exists!'});
                      }
                      else {
-                        vendor.save().then(() => {
+                        vendor.save()
+                        .then(() => {
                             res.status(200).json({status: 'success'});
                         })
+                        .catch(function (err) {
+                            res.status(500).json({status: 'status', error: err.message});
+                            console.error(err);
+                          })
                      }
 
                  });

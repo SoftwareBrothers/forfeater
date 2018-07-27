@@ -48,9 +48,18 @@ exports.store =  [
                          res.status(409).json({status: 'fail', data: 'Product already exists!'});
                      }
                      else {
-                        model.save().then(() => {
+                        model.save()
+                        .then(() => {
                             res.status(200).json({status: 'success'});
                         })
+                        .catch(function (err) {
+                            if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
+                                res.status(501).json({status: 'status', error: err.message});
+                            } else {
+                                res.status(500).json({status: 'status', error: err.message});
+                            }
+                            console.error(err);
+                          })
                      }
 
                  });

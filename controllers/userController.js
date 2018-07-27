@@ -52,9 +52,14 @@ exports.store =  [
                          res.status(409).json({status: 'fail', data: 'User already exists!'});
                      }
                      else {
-                        model.save().then(() => {
+                        model.save()
+                        .then(() => {
                             res.status(200).json({status: 'success'});
                         })
+                        .catch(function (err) {
+                            res.status(500).json({status: 'status', error: err.message});
+                            console.error(err);
+                          })
                      }
 
                  });
