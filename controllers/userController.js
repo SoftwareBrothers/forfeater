@@ -54,10 +54,10 @@ exports.store =  [
                      else {
                         model.save()
                         .then(() => {
-                            res.status(200).json({status: 'success'});
+                            res.status(200).json({status: 'success', data: model});
                         })
                         .catch(function (err) {
-                            res.status(500).json({status: 'status', error: err.message});
+                            res.status(500).json({status: 'error', error: err.message});
                             console.error(err);
                           })
                      }
@@ -66,3 +66,58 @@ exports.store =  [
         }
     }
 ];
+
+exports.update = [
+    
+    body('role', 'Role required').isLength({ min: 1 }).trim(),
+    body('firstName', 'First name required').isLength({ min: 1 }).trim(),
+    body('lastName', 'Last name required').isLength({ min: 1 }).trim(),
+    body('email', 'Email required').isEmail().trim(),
+
+    sanitizeBody('role').trim().escape(),
+    sanitizeBody('firstName').trim(),
+    sanitizeBody('lastName').trim(),
+    sanitizeBody('email').trim(),
+
+    function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(422).json({ status: 'fail', errors: errors.array() });
+        } else {
+            User.update(
+                req.body,
+                { where: { id: req.params.id } }
+            ).then(result => {
+                if (result) {
+                    res.json({ status: 'success' })
+                } else {
+                    res.status(404).json({ success: false, message: "User with ID: " + req.params.id + "  not found" })
+                }
+            }).catch(error => {
+                if (error instanceof db.Sequelize.UniqueConstraintError) {
+                    res.status(409).json({ status: 'error', error: 'E-mail must be unique' });
+                } else {
+                    res.status(500).json({ status: 'error', error: error.message });
+                }
+                console.error(err);
+            })
+
+        }
+    }
+]
+
+exports.delete = (req, res) => {
+    User.destroy({
+        where: {
+            id: req.params.id
+        }
+    }).then(function (numberOfDeleted) {
+        if(numberOfDeleted === 1) {
+            res.status(200).json({ status: 'success', message: "Deleted successfully" });
+        } else {
+            res.status(404).json({ status: 'error', message: "User with ID: " + req.params.id + " not found" })
+        }
+    }).catch(function (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    });
+}

@@ -1,6 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var product = sequelize.define('product', {
+    active: DataTypes.INTEGER,
     name: DataTypes.STRING,
     vendorId: DataTypes.INTEGER
   }, {});

@@ -2,8 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-      queryInterface.bulkDelete('products');
-
+    
       return queryInterface.bulkInsert('products', [{
           name: 'Frytki',
           vendorId: 1,

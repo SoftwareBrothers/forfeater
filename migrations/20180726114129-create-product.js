@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      active: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 1,
+      },
       name: {
         type: Sequelize.STRING
       },
@@ -18,7 +23,7 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'cascade',
-        onDelete: 'cascade'
+        onDelete: 'restrict'
       },
       createdAt: {
         allowNull: false,
