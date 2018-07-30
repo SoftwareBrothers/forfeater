@@ -6,7 +6,16 @@ var Product = db.product;
 var Vendor = db.vendor;
 
 exports.list = function (req, res) {
-    Product.findAll({ include: [Vendor] }).then(products => {
+    var whereConditions = {};
+    if (req.query.active) {
+        whereConditions.active = req.query.active;
+    }
+    if (req.query.vendorId) {
+        whereConditions.vendorId = req.query.vendorId;
+    }
+    Product.findAll({
+        where: whereConditions,
+        include: [Vendor] }).then(products => {
         res.json(products);
     })
 };
