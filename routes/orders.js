@@ -11,4 +11,6 @@ router.post('/create', order_controller.store);
 
 router.put('/:orderId/choices', choice_controller.store);
 
+router.patch('/:orderId/ratings', choice_controller.store_rating);
+
 module.exports = router;
