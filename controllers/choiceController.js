@@ -52,20 +52,30 @@ exports.store =  [
             res.status(422).json({status: 'fail', errors: errors.array()});
         }
         else {
-            var choice = Choice.findOrCreate({
-                where: {
-                    'orderId': req.params.orderId,
-                    'userId': req.body.userId,
-                    'productId': req.body.productId
+            Order.findOne({ where: {'id': req.params.orderId }}).then(order => {
+                var deadline = new Date(order.deadlineAt);
+                var date = new Date();
+                var dateDiff = deadline - date;
+                if (dateDiff < 0) {
+                    res.status(403).json({status: 'fail', errors: 'Time for voting has passed'});
+                    return;
                 }
-            }).then( choice => {
-                res.status(200).json(choice);
-            }).catch(function (error) {
-                if (error instanceof db.Sequelize.ForeignKeyConstraintError) {
-                    res.status(501).json({status: 'status', error: error.message});
-                } else {
-                    res.status(500).json({status: 'status', error: error.message});
-                }
+
+                var choice = Choice.findOrCreate({
+                    where: {
+                        'orderId': req.params.orderId,
+                        'userId': req.body.userId,
+                        'productId': req.body.productId
+                    }
+                }).then( choice => {
+                    res.status(200).json(choice);
+                }).catch(function (error) {
+                    if (error instanceof db.Sequelize.ForeignKeyConstraintError) {
+                        res.status(501).json({status: 'status', error: error.message});
+                    } else {
+                        res.status(500).json({status: 'status', error: error.message});
+                    }
+                });
             });
         }
     }
