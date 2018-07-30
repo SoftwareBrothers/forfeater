@@ -6,7 +6,7 @@ var Vendor = db.vendor;
 var Product = db.product;
 
 exports.list = function (req, res) {
-    Vendor.findAll({ include: [Product] }).then(vendors => {
+    Vendor.findAll().then(vendors => {
         res.json(vendors);
     })
 };
