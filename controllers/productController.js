@@ -53,9 +53,9 @@ exports.store = [
                             })
                             .catch(function (err) {
                                 if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
-                                    res.status(501).json({ status: 'status', error: err.message });
+                                    res.status(501).json({ status: 'error', error: err.message });
                                 } else {
-                                    res.status(500).json({ status: 'status', error: err.message });
+                                    res.status(500).json({ status: 'error', error: err.message });
                                 }
                                 console.error(err);
                             })

@@ -2,8 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-      queryInterface.bulkDelete('vendors');
-
+     
       return queryInterface.bulkInsert('vendors', [{
           name: 'KFC',
           url: 'www.kfc.pl',
