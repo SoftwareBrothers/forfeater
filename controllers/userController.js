@@ -1,8 +1,10 @@
-const { body,validationResult } = require('express-validator/check');
+const { checkSchema, body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 var db = require('../models');
 var User = db.user;
+
+var userSchema = require('../schemas/userSchema');
 
 exports.list = function (req, res) {
     User.findAll().then(users => {
@@ -17,26 +19,12 @@ exports.show = function (req, res) {
 };
 
 exports.store =  [
-   
-    // Validate that the name field is not empty.
-    body('role', 'Role required').isLength({ min: 1 }).trim(),
-    body('firstName', 'First name required').isLength({ min: 1 }).trim(),
-    body('lastName', 'Last name required').isLength({ min: 1 }).trim(),
-    body('email', 'Email required').isEmail().trim(),
 
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('role').trim().escape(),
-    sanitizeBody('firstName').trim(),
-    sanitizeBody('lastName').trim(),
-    sanitizeBody('email').trim(),
+    checkSchema(userSchema.store),
 
-    // Process request after validation and sanitization.
     (req, res, next) => {
-
-        // Extract the validation errors from a request.
         const errors = validationResult(req);
 
-        // Create a genre object with escaped and trimmed data.
         var model = new User(
           { role: req.body.role, firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email }
         );
@@ -69,15 +57,7 @@ exports.store =  [
 
 exports.update = [
     
-    body('role', 'Role required').isLength({ min: 1 }).trim(),
-    body('firstName', 'First name required').isLength({ min: 1 }).trim(),
-    body('lastName', 'Last name required').isLength({ min: 1 }).trim(),
-    body('email', 'Email required').isEmail().trim(),
-
-    sanitizeBody('role').trim().escape(),
-    sanitizeBody('firstName').trim(),
-    sanitizeBody('lastName').trim(),
-    sanitizeBody('email').trim(),
+    checkSchema(userSchema.update),
 
     function (req, res) {
         const errors = validationResult(req);
