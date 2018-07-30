@@ -6,3 +6,9 @@ run-test:
 
 run-server:
 	nodemon DEBUG=forfeater:* npm start
+
+db-migrate:
+	node_modules/.bin/sequelize db:migrate
+
+db-seeds:
+	node_modules/.bin/sequelize db:seed:all

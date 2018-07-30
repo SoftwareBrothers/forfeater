@@ -46,6 +46,7 @@ exports.store =  [
         }
         else {
         
+        
             User.findOne({ where: {'email': req.body.email }})
                 .then( found_model => { 
                      if (found_model) {
@@ -54,7 +55,7 @@ exports.store =  [
                      else {
                         model.save()
                         .then(() => {
-                            res.status(200).json({status: 'success'});
+                            res.status(200).json({status: 'success', data: model});
                         })
                         .catch(function (err) {
                             res.status(500).json({status: 'status', error: err.message});
