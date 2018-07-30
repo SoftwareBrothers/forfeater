@@ -8,6 +8,4 @@ router.get('/orders/:orderId', choice_controller.listOfOrder);
 
 router.get('/:id', choice_controller.show);
 
-router.post('/create', choice_controller.store);
-
 module.exports = router;
