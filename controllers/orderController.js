@@ -1,10 +1,12 @@
-const { body,validationResult } = require('express-validator/check');
+const { checkSchema, body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 var db = require('../models');
 var Order = db.order;
 var Vendor = db.vendor;
 var User = db.user;
+
+var vendorSchema = require('../schemas/orderSchema');
 
 exports.list = function (req, res) {
     Order.findAll({ include: [ Vendor, User ] }).then(orders => {
@@ -19,15 +21,8 @@ exports.show = function (req, res) {
 }
 
 exports.store =  [
-   
-    // Validate that the name field is not empty.
-    body('vendorId', 'VendorId required').isLength({ min: 1 }).trim(),
-    body('userId', 'UserId required').isLength({ min: 1 }).trim(),
-    body('deadlineAt', 'Deadline is required').isLength({ min: 1 }).trim(),
-    // body('deliveryAt', 'Format is wrong').isLength({ min: 1 }).trim(),
 
-    // Sanitize (trim and escape) the name field.
-    // sanitizeBody('name').trim().escape(),
+    checkSchema(vendorSchema.store),
 
     // Process request after validation and sanitization.
     (req, res, next) => {

@@ -1,9 +1,11 @@
-const { body, validationResult } = require('express-validator/check');
+const { checkSchema, body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 var db = require('../models');
 var Product = db.product;
 var Vendor = db.vendor;
+
+var productSchema = require('../schemas/productSchema');
 
 exports.list = function (req, res) {
     var whereConditions = {};
@@ -27,12 +29,8 @@ exports.show = function (req, res) {
 }
 
 exports.store = [
-    // Validate that the name field is not empty.
-    body('name', 'Name required').isLength({ min: 1 }).trim(),
-    body('vendorId', 'VendorId required').isLength({ min: 1 }).trim(),
 
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('name').trim().escape(),
+    checkSchema(productSchema.store),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -76,8 +74,9 @@ exports.store = [
 ]
 
 exports.put = [
-    body('name', 'Name required').isLength({ min: 1 }).trim(),
-    sanitizeBody('name').trim().escape(),
+
+    checkSchema(productSchema.update),
+
     function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
