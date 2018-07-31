@@ -30,6 +30,8 @@ GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
 > `GET /products?active=1&vendorId=:vendorId`
 
 # user:
+#### get active order(s?):
+> `GET /orders?active=1`
 #### get available products for current order/retro/vendor:
 > `GET /products?active=1&vendorId=:vendorId`
 #### get product details:

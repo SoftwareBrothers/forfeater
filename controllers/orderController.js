@@ -8,8 +8,25 @@ var User = db.user;
 
 var vendorSchema = require('../schemas/orderSchema');
 
+var Sequelize = db.Sequelize;
+const Op = Sequelize.Op;
+
 exports.list = function (req, res) {
-    Order.findAll({ include: [ Vendor, User ] }).then(orders => {
+    var whereConditions = {};
+    if (typeof req.query.active !== 'undefined') {
+        if (req.query.active === '1') {
+            whereConditions.deadlineAt = {
+                [Op.gte]: new Date()
+            };
+        } else if (req.query.active === '0') {
+            whereConditions.deadlineAt = {
+                [Op.lte]: new Date()
+            };
+        }
+    }
+    Order.findAll({
+        where: whereConditions,
+        include: [ Vendor, User ] }).then(orders => {
         res.json(orders);
     })
 };
