@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     vendorId: DataTypes.INTEGER
   }, {});
   product.associate = function(models) {
-    product.belongsTo(models.vendor)
+    product.belongsTo(models.vendor),
+    product.hasMany(models.choice)
   };
   return product;
 };

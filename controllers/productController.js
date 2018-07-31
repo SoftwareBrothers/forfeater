@@ -4,26 +4,59 @@ const { sanitizeBody } = require('express-validator/filter');
 var db = require('../models');
 var Product = db.product;
 var Vendor = db.vendor;
+var Choice = db.choice;
 
 var productSchema = require('../schemas/productSchema');
 
+var db = require('../models/index');
+var sequelize = db.sequelize;
+
 exports.list = function (req, res) {
-    var whereConditions = {};
+    /**
+     * TODO
+     * controllers should be free of queries
+     * this code will be moved in future to repository
+     * maybe it could be done through sequelizer objects?
+     */
+    var postgresQuery = 'SELECT\n' +
+        '  products.id,\n' +
+        '  products.active,\n' +
+        '  products.name,\n' +
+        '  products."vendorId",\n' +
+        '  products."createdAt",\n' +
+        '  products."updatedAt",\n' +
+        '  ROUND(u."avgScore",2) AS "avgScore",\n' +
+        '  u."rankCount"\n' +
+        'FROM\n' +
+        ' products\n' +
+        'LEFT JOIN (\n' +
+        '  SELECT\n' +
+        '    "productId",\n' +
+        '    AVG(score) AS "avgScore",\n' +
+        '    SUM(case when score is null then 0 else 1 end) AS "rankCount"' +
+        '  FROM\n' +
+        '    choices\n' +
+        '  GROUP BY "productId"\n' +
+        ') u ON u."productId" = products.id WHERE 1=1';
+
     if (req.query.active) {
-        whereConditions.active = req.query.active;
+        postgresQuery += ' AND products.active=\'' + req.query.active + '\'';
     }
     if (req.query.vendorId) {
-        whereConditions.vendorId = req.query.vendorId;
+        postgresQuery += ' AND products."vendorId" = \'' + req.query.vendorId + '\'';
     }
-    Product.findAll({
-        where: whereConditions,
-        include: [Vendor] }).then(products => {
-        res.json(products);
+
+    // remember - controllers free of queries
+    sequelize.query(
+        postgresQuery,
+        { type: sequelize.QueryTypes.SELECT}
+    ).then(function(result) {
+        res.json(result);
     })
 };
 
 exports.show = function (req, res) {
-    Product.findById(req.params.id, { include: [Vendor] }).then(product => {
+    Product.findById(req.params.id, { include: [Vendor, Choice] }).then(product => {
         res.json(product);
     })
 }

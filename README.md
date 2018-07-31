@@ -32,6 +32,8 @@ GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
 # user:
 #### get available products for current order/retro/vendor:
 > `GET /products?active=1&vendorId=:vendorId`
+#### get product details:
+> `GET /products/:productId`
 #### make a choice:
 > `PUT /orders/:orderid/choices`
 #### rate meal afterwards
