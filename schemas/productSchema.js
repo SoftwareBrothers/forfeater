@@ -26,8 +26,8 @@ var update = {
         },
         trim: true
     },
-    id: {
-        in: ['params'],
+    vendorId: {
+        in: ['body'],
         isLength: {
             errorMessage: 'Vendor id is required',
             options: { min: 1 }

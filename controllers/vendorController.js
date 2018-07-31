@@ -23,7 +23,6 @@ exports.store =  [
 
     checkSchema(vendorSchema.store),
 
-    // Process request after validation and sanitization.
     (req, res, next) => {
 
         // Extract the validation errors from a request.

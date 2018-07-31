@@ -6,15 +6,7 @@ var store = {
             options: { min: 1 }
         },
         trim: true
-    },
-    url: {
-        in: ['body'],
-        isLength: {
-            errorMessage: 'Url name is required',
-            options: { min: 1 }
-        },
-        trim: true
-    },
+    }
 };
 
 module.exports = {store};

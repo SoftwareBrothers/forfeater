@@ -56,7 +56,7 @@ exports.store = [
                     else {
                         model.save()
                             .then(() => {
-                                res.status(200).json({ status: 'success' });
+                                res.status(200).json(model);
                             })
                             .catch(function (err) {
                                 if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
@@ -73,7 +73,7 @@ exports.store = [
     }
 ]
 
-exports.put = [
+exports.update = [
 
     checkSchema(productSchema.update),
 
@@ -109,7 +109,7 @@ exports.delete = (req, res) => {
             res.status(200).json({ success: true, message: "Deleted successfully" });
         }
         else {
-            res.status(404).json({ success: false, message: "Product with ID: " + res.params.id + "  not found" })
+            res.status(404).json({ success: false, message: "Product with ID: " + req.params.id + "  not found" })
         }
     }).catch(function (error) {
         res.status(500).json({ 'error': error });
