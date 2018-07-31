@@ -24,13 +24,15 @@ exports.list = function (req, res) {
         '  products."vendorId",\n' +
         '  products."createdAt",\n' +
         '  products."updatedAt",\n' +
-        '  ROUND(u."avgScore",2)\n' +
+        '  ROUND(u."avgScore",2) AS "avgScore",\n' +
+        '  u."rankCount"\n' +
         'FROM\n' +
         ' products\n' +
         'LEFT JOIN (\n' +
         '  SELECT\n' +
         '    "productId",\n' +
-        '    AVG(score) AS "avgScore"\n' +
+        '    AVG(score) AS "avgScore",\n' +
+        '    SUM(case when score is null then 0 else 1 end) AS "rankCount"' +
         '  FROM\n' +
         '    choices\n' +
         '  GROUP BY "productId"\n' +
