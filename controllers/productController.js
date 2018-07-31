@@ -7,18 +7,48 @@ var Vendor = db.vendor;
 
 var productSchema = require('../schemas/productSchema');
 
+var db = require('../models/index');
+var sequelize = db.sequelize;
+
 exports.list = function (req, res) {
-    var whereConditions = {};
+    /**
+     * TODO
+     * controllers should be free of queries
+     * this code will be moved in future to repository
+     * maybe it could be done through sequelizer objects?
+     */
+    var postgresQuery = 'SELECT\n' +
+        '  products.id,\n' +
+        '  products.active,\n' +
+        '  products.name,\n' +
+        '  products."vendorId",\n' +
+        '  products."createdAt",\n' +
+        '  products."updatedAt",\n' +
+        '  ROUND(u."avgScore",2)\n' +
+        'FROM\n' +
+        ' products\n' +
+        'LEFT JOIN (\n' +
+        '  SELECT\n' +
+        '    "productId",\n' +
+        '    AVG(score) AS "avgScore"\n' +
+        '  FROM\n' +
+        '    choices\n' +
+        '  GROUP BY "productId"\n' +
+        ') u ON u."productId" = products.id WHERE 1=1';
+
     if (req.query.active) {
-        whereConditions.active = req.query.active;
+        postgresQuery += ' AND products.active=\'' + req.query.active + '\'';
     }
     if (req.query.vendorId) {
-        whereConditions.vendorId = req.query.vendorId;
+        postgresQuery += ' AND products."vendorId" = \'' + req.query.vendorId + '\'';
     }
-    Product.findAll({
-        where: whereConditions,
-        include: [Vendor] }).then(products => {
-        res.json(products);
+
+    // remember - controllers free of queries
+    sequelize.query(
+        postgresQuery,
+        { type: sequelize.QueryTypes.SELECT}
+    ).then(function(result) {
+        res.json(result);
     })
 };
 
