@@ -1,4 +1,5 @@
 'use strict';
+const today = new Date();
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -19,7 +20,7 @@ module.exports = {
   },{
     vendorId: 2,
     userId: 2,
-    deadlineAt: new Date(),
+    deadlineAt: new Date(today.getTime() + 1000 * 60 * 60 * 24),
     deliveryAt: null,
     createdAt: new Date(),
     updatedAt: new Date()
