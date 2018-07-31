@@ -1,9 +1,11 @@
-const { body, validationResult } = require('express-validator/check');
+const { checkSchema, body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 var db = require('../models');
 var Product = db.product;
 var Vendor = db.vendor;
+
+var productSchema = require('../schemas/productSchema');
 
 exports.list = function (req, res) {
     var whereConditions = {};
@@ -27,12 +29,8 @@ exports.show = function (req, res) {
 }
 
 exports.store = [
-    // Validate that the name field is not empty.
-    body('name', 'Name required').isLength({ min: 1 }).trim(),
-    body('vendorId', 'VendorId required').isLength({ min: 1 }).trim(),
 
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('name').trim().escape(),
+    checkSchema(productSchema.store),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -58,7 +56,7 @@ exports.store = [
                     else {
                         model.save()
                             .then(() => {
-                                res.status(200).json({ status: 'success' });
+                                res.status(200).json(model);
                             })
                             .catch(function (err) {
                                 if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
@@ -75,9 +73,10 @@ exports.store = [
     }
 ]
 
-exports.put = [
-    body('name', 'Name required').isLength({ min: 1 }).trim(),
-    sanitizeBody('name').trim().escape(),
+exports.update = [
+
+    checkSchema(productSchema.update),
+
     function (req, res) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -110,7 +109,7 @@ exports.delete = (req, res) => {
             res.status(200).json({ success: true, message: "Deleted successfully" });
         }
         else {
-            res.status(404).json({ success: false, message: "Product with ID: " + res.params.id + "  not found" })
+            res.status(404).json({ success: false, message: "Product with ID: " + req.params.id + "  not found" })
         }
     }).catch(function (error) {
         res.status(500).json({ 'error': error });

@@ -10,10 +10,24 @@ GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
 # forferater flow:
 
 # admin:
-#### get vendors:
-> `GET /vendors`
+#### add vendor
+> `POST /vendors`
+#### update vendor
+> `PATCH /vendors/:vendorId`
+#### add product
+> `POST /products`
+#### update product
+> `PATCH /products/:productId`
+#### delete product
+> `DELETE /products/:productId`
+#### add vendor:
+> `POST /vendors`
+#### update vendor:
+> `PATCH /vendors/:vendorId`
+#### delete vendor:
+> `DELETE /vendors/:vendorId`
 #### get products for vendor:
-> `GET /products?active=1&vendorId=2`
+> `GET /products?active=1&vendorId=:vendorId`
 
 # user:
 #### get available products for current order/retro:

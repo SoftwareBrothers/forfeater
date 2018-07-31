@@ -1,4 +1,4 @@
-const { body,validationResult } = require('express-validator/check');
+const { checkSchema, body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
 var db = require('../models');
@@ -6,6 +6,8 @@ var Choice = db.choice;
 var Order = db.order;
 var User = db.user;
 var Product = db.product;
+
+var choiceSchema = require('../schemas/choiceSchema');
 
 exports.list = function (req, res) {
     Choice.findAll({ include: [ Order, User, Product ] }).then(choices => {
@@ -29,14 +31,9 @@ exports.show = function (req, res) {
 }
 
 exports.store_rating =  [
-    // Validate that the name field is not empty.
-    body('userId', 'UserId required').isLength({ min: 1 }).trim(),
-    body('mark', 'Mark is required').isLength({ min: 1 }).trim(),
 
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('mark').trim().escape(),
+    checkSchema(choiceSchema.store_rating),
 
-    // Process request after validation and sanitization.
     (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
@@ -66,12 +63,8 @@ exports.store_rating =  [
 ];
 
 exports.store =  [
-    // Validate that the name field is not empty.
-    body('userId', 'UserId required').isLength({ min: 1 }).trim(),
-    body('productId', 'ProductId required').isLength({ min: 1 }).trim(),
 
-    // Sanitize (trim and escape) the name field.
-    sanitizeBody('name').trim().escape(),
+    checkSchema(choiceSchema.store),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
