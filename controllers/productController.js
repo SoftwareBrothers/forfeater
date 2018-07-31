@@ -4,6 +4,7 @@ const { sanitizeBody } = require('express-validator/filter');
 var db = require('../models');
 var Product = db.product;
 var Vendor = db.vendor;
+var Choice = db.choice;
 
 var productSchema = require('../schemas/productSchema');
 
@@ -55,7 +56,7 @@ exports.list = function (req, res) {
 };
 
 exports.show = function (req, res) {
-    Product.findById(req.params.id, { include: [Vendor] }).then(product => {
+    Product.findById(req.params.id, { include: [Vendor, Choice] }).then(product => {
         res.json(product);
     })
 }
