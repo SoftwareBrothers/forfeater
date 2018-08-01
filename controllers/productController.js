@@ -111,12 +111,14 @@ exports.update = [
         if (!errors.isEmpty()) {
             res.status(422).json({ status: 'fail', errors: errors.array() });
         } else {
+            model = new Product(req.body)
+            model.id = req.params.productId;
             Product.update(
                 req.body,
                 { where: { id: req.params.productId } }
             ).then(result => {
                 if (result) {
-                    res.json({ status: 'success' })
+                    res.status(200).json(model)
                 } else {
                     res.status(404).json({ success: false, message: "Product with ID: " + res.params.id + "  not found" })
                 }
