@@ -15,11 +15,11 @@ GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
 #### update vendor
 > `PATCH /vendors/:vendorId`
 #### add product
-> `POST /products`
+> `POST /vendors/:vendorId/products`
 #### update product
-> `PATCH /products/:productId`
+> `PATCH /vendors/:vendorId/products/:productId`
 #### delete product
-> `DELETE /products/:productId`
+> `DELETE /vendors/:vendorId/products/:productId`
 #### add vendor:
 > `POST /vendors`
 #### update vendor:
@@ -27,15 +27,15 @@ GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
 #### delete vendor:
 > `DELETE /vendors/:vendorId`
 #### get products for vendor:
-> `GET /products?active=1&vendorId=:vendorId`
+> `GET /vendors/:vendorId/products?active=1`
 
 # user:
 #### get active order(s?):
 > `GET /orders?active=1`
 #### get available products for current order/retro/vendor:
-> `GET /products?active=1&vendorId=:vendorId`
+> `GET /vendors/:vendorId/products?active=1`
 #### get product details:
-> `GET /products/:productId`
+> `GET /vendors/:vendorId/products/:productId`
 #### make a choice:
 > `PUT /orders/:orderid/choices`
 #### rate meal afterwards
