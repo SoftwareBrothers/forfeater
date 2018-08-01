@@ -15,10 +15,10 @@ var store = {
         },
         trim: true
     },
-    deadlineAt: {
+    orderId: {
         in: ['body'],
         isLength: {
-            errorMessage: 'Deadline is required',
+            errorMessage: 'Order id is required',
             options: { min: 1 }
         },
         trim: true
