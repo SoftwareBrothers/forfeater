@@ -37,13 +37,9 @@ exports.list = function (req, res) {
         '  FROM\n' +
         '    choices\n' +
         '  GROUP BY "productId"\n' +
-        ') u ON u."productId" = products.id WHERE 1=1';
-
+        ') u ON u."productId" = products.id WHERE products."vendorId"=\'' + req.params.vendorId + '\'';
     if (req.query.active) {
         postgresQuery += ' AND products.active=\'' + req.query.active + '\'';
-    }
-    if (req.query.vendorId) {
-        postgresQuery += ' AND products."vendorId" = \'' + req.query.vendorId + '\'';
     }
 
     // remember - controllers free of queries
@@ -56,7 +52,7 @@ exports.list = function (req, res) {
 };
 
 exports.show = function (req, res) {
-    Product.findById(req.params.id, { include: [Vendor, Choice] }).then(product => {
+    Product.findById(req.params.productId, { include: [Vendor, Choice] }).then(product => {
         res.json(product);
     })
 }
@@ -73,7 +69,7 @@ exports.store = [
 
         // Create a genre object with escaped and trimmed data.
         var model = new Product(
-            { name: req.body.name, vendorId: req.body.vendorId }
+            { name: req.body.name, vendorId: req.params.vendorId }
         );
 
         if (!errors.isEmpty()) {
@@ -117,7 +113,7 @@ exports.update = [
         } else {
             Product.update(
                 req.body,
-                { where: { id: req.params.id } }
+                { where: { id: req.params.productId } }
             ).then(result => {
                 if (result) {
                     res.json({ status: 'success' })
@@ -135,7 +131,7 @@ exports.update = [
 exports.delete = (req, res) => {
     Product.destroy({
         where: {
-            id: req.params.id
+            id: req.params.productId
         }
     }).then(function (deletedRecord) {
         if (deletedRecord === 1) {
