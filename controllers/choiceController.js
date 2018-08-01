@@ -70,19 +70,19 @@ exports.store =  [
     (req, res, next) => {
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-
         // Create a genre object with escaped and trimmed data.
         var model = new Choice({
-            orderId: req.params.orderId,
+            orderId: req.body.orderId,
             userId: req.body.userId,
             productId: req.body.productId
         });
 
+    console.log(req.body);
         if (!errors.isEmpty()) {
             res.status(422).json({status: 'fail', errors: errors.array()});
         }
         else {
-            Order.findOne({ where: {'id': req.params.orderId }}).then(order => {
+            Order.findOne({ where: {'id': model.orderId }}).then(order => {
                 var deadline = new Date(order.deadlineAt);
                 var date = new Date();
                 var dateDiff = deadline - date;
@@ -93,9 +93,9 @@ exports.store =  [
 
                 var choice = Choice.findOrCreate({
                     where: {
-                        'orderId': req.params.orderId,
-                        'userId': req.body.userId,
-                        'productId': req.body.productId
+                        'orderId': model.orderId,
+                        'userId': model.userId,
+                        'productId': model.productId
                     }
                 }).then( choice => {
                     res.status(200).json(choice);
