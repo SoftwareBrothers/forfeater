@@ -27,6 +27,14 @@ var store = {
         in: ['body'],
         isEmail: true,
         trim: true
+    },
+    password: {
+        in: ['body'],
+        isLength: {
+            errorMessage: 'Password is required and more then 4 chars',
+            options: { min: 4 }
+            },
+        trim:true
     }
 }
 
