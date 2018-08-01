@@ -7,6 +7,11 @@ var store = {
         },
         trim: true
     },
+    active: {
+        in: ['body'],
+        isBoolean: true,
+        trim: true
+    },
     vendorId: {
         in: ['body'],
         isLength: {
@@ -24,6 +29,11 @@ var update = {
             errorMessage: 'Name is required',
             options: { min: 1 }
         },
+        trim: true
+    },
+    active: {
+        in: ['body'],
+        isBoolean: true,
         trim: true
     },
     vendorId: {

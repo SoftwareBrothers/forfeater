@@ -69,7 +69,7 @@ exports.store = [
 
         // Create a genre object with escaped and trimmed data.
         var model = new Product(
-            { name: req.body.name, vendorId: req.params.vendorId }
+            { name: req.body.name, vendorId: req.params.vendorId, active: req.body.active }
         );
 
         if (!errors.isEmpty()) {
