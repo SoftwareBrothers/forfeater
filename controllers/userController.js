@@ -42,7 +42,7 @@ exports.store =  [
                      else {
                         model.save()
                         .then(() => {
-                            res.status(200).json({status: 'success', data: model});
+                            res.status(201).json(model);
                         })
                         .catch(function (err) {
                             res.status(500).json({status: 'error', error: err.message});
