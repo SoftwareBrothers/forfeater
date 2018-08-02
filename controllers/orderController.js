@@ -64,7 +64,7 @@ exports.store =  [
         
             model.save()
                 .then(() => {
-                    res.status(200).json({status: 'success'});
+                    res.status(201).json(model);
                 })
                 .catch(function (err) {
                     if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
