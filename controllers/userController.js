@@ -26,7 +26,7 @@ exports.store =  [
         const errors = validationResult(req);
 
         var model = new User(
-          { role: req.body.role, firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email }
+          { role: req.body.role, firstName: req.body.firstName, lastName: req.body.lastName, email: req.body.email, password: req.body.password }
         );
 
         if (!errors.isEmpty()) {
