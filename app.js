@@ -14,10 +14,6 @@ var productsRouter = require('./routes/products');
 var ordersRouter = require('./routes/orders');
 var choicesRouter = require('./routes/choices');
 
-const mySqlConnection = require('./databaseHelpers/mySqlWrapper');
-const accessTokenDBHelper = require('./databaseHelpers/accessTokensDBHelper')(mySqlConnection)
-const userDBHelper = require('./databaseHelpers/userDBHelper')(mySqlConnection);
-
 var app = express();
 app.oauth = oauthServer({
     model: require('./oauth/models'),
