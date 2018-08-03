@@ -12,7 +12,6 @@ module.exports = function (app) {
 
 
 
-    // router.get('/syncDb', auth_controller.syncDb);
     // router.post('/getAccessToken', auth_controller.getAccessToken);
     //
     // // router.post('/restrictedArea', app.oauth.authorise(), auth_controller.restrictedArea);
