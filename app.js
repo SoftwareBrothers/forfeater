@@ -18,10 +18,9 @@ const mySqlConnection = require('./databaseHelpers/mySqlWrapper');
 const accessTokenDBHelper = require('./databaseHelpers/accessTokensDBHelper')(mySqlConnection)
 const userDBHelper = require('./databaseHelpers/userDBHelper')(mySqlConnection);
 
-var oAuthModel = require('./oauth/models')(userDBHelper, accessTokenDBHelper);
 var app = express();
 app.oauth = oauthServer({
-    model: require('./oauth/models_v2'),
+    model: require('./oauth/models'),
     grants: ['password'],
     debug: true
 });

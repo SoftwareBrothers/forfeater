@@ -1,116 +1,147 @@
-let userDBHelper;
-let accessTokensDBHelper;
+/**
+ * Copyright 2013-present NightWorld.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-module.exports =  (injectedUserDBHelper, injectedAccessTokenDbHelper) => {
+var pg = require('pg'),
+    model = module.exports,
+    // connString = process.env.DATABASE_URL;
+    connString = "pg://postgres:@localhost:5432/forfeaterjs";
 
-    userDBHelper = injectedUserDBHelper;
-    accessTokensDBHelper = injectedAccessTokenDbHelper;
+/*
+ * Required
+ */
 
-    return  {
+model.getAccessToken = function (bearerToken, callback) {
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
+        client.query('SELECT access_token, client_id, expires, user_id FROM oauth_access_tokens ' +
+            'WHERE access_token = $1', [bearerToken], function (err, result) {
+            if (err || !result.rowCount) return callback(err);
+            // This object will be exposed in req.oauth.token
+            // The user_id field will be exposed in req.user (req.user = { id: "..." }) however if
+            // an explicit user object is included (token.user, must include id) it will be exposed
+            // in req.user instead
+            var token = result.rows[0];
+            callback(null, {
+                accessToken: token.access_token,
+                clientId: token.client_id,
+                expires: token.expires,
+                userId: token.userId
+            });
+            done();
+        });
+    });
+};
 
-        getClient: getClient,
+model.getClient = function (clientId, clientSecret, callback) {
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
 
-        saveAccessToken: saveAccessToken,
+        client.query('SELECT client_id, client_secret, redirect_uri FROM oauth_clients WHERE ' +
+            'client_id = $1', [clientId], function (err, result) {
+            if (err || !result.rowCount) return callback(err);
 
-        getUser: getUser,
+            var client = result.rows[0];
 
-        grantTypeAllowed: grantTypeAllowed,
+            console.log('-----------------------');
+            console.log(client);
+            console.log('-----------------------');
 
-        getAccessToken: getAccessToken
+            if (clientSecret !== null && client.client_secret !== clientSecret) return callback();
+
+            // This object will be exposed in req.oauth.client
+            callback(null, {
+                clientId: client.client_id,
+                clientSecret: client.client_secret
+            });
+            done();
+        });
+    });
+};
+
+model.getRefreshToken = function (bearerToken, callback) {
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
+        client.query('SELECT refresh_token, client_id, expires, user_id FROM oauth_refresh_tokens ' +
+            'WHERE refresh_token = $1', [bearerToken], function (err, result) {
+            // The returned user_id will be exposed in req.user.id
+            callback(err, result.rowCount ? result.rows[0] : false);
+            done();
+        });
+    });
+};
+
+// This will very much depend on your setup, I wouldn't advise doing anything exactly like this but
+// it gives an example of how to use the method to resrict certain grant types
+var authorizedClientIds = ['forfeaterweb'];
+model.grantTypeAllowed = function (clientId, grantType, callback) {
+    if (grantType === 'password') {
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+        console.log(clientId.toLowerCase());
+        console.log(authorizedClientIds.indexOf(clientId.toLowerCase()) >= 0);
+        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+        return callback(false, authorizedClientIds.indexOf(clientId.toLowerCase()) >= 0);
     }
-}
-
-
-/* This method returns the client application which is attempting to get the accessToken.
- The client is normally be found using the  clientID & clientSecret. However, with user facing client applications such
- as mobile apps or websites which use the password grantType we don't use the clientID or clientSecret in the authentication flow.
- Therefore, although the client  object is required by the library all of the client's fields can be  be null. This also
-includes the grants field. Note that we did, however, specify that we're using the password grantType when we made the
-oAuth object in the index.js file.
-The callback takes 2 parameters. The first parameter is an error of type falsey and the second is a client object.
-As we're not of retrieving the client using the clientID and clientSecret (as we're using the password grantType)
-we can just create an empty client with all null values.Because the client is a hardcoded object
- - as opposed to a client we've retrieved through another operation - we just pass false for the error parameter
-  as no errors can occur due to the aforemtioned hardcoding */
-function getClient(clientID, clientSecret, callback){
-
-    const client = {
-        clientID,
-        clientSecret,
-        grants: null,
-        redirectUris: null
-    }
-
-    callback(false, client);
-}
-
-/* Determines whether or not the client which has to the specified clientID is permitted to use the specified grantType.
-  The callback takes an eror of type truthy, and a boolean which indcates whether the client that has the specified clientID
-  is permitted to use the specified grantType. As we're going to hardcode the response no error can occur
-  hence we return false for the error and as there is there are no clientIDs to check we can just return true to indicate
-  the client has permission to use the grantType. */
-function grantTypeAllowed(clientID, grantType, callback) {
-
-    console.log('grantTypeAllowed called and clientID is: ', clientID, ' and grantType is: ', grantType);
 
     callback(false, true);
-}
+};
 
+model.saveAccessToken = function (accessToken, clientId, expires, userId, callback) {
+    console.log('^^^^^^^^^^^^^^^^^^^^');
+    console.log(accessToken);
+    console.log(clientId);
+    console.log(userId);
+    console.log(expires);
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
+        client.query("INSERT INTO oauth_access_tokens(access_token, client_id, user_id, expires) " +
+            "VALUES ($1, $2, $3, $4)", [accessToken, clientId, userId, expires],
+            function (err, result) {
+                callback(err);
+                done();
+            });
+    });
+};
 
-/* The method attempts to find a user with the spcecified username and password. The callback takes 2 parameters.
-   This first parameter is an error of type truthy, and the second is a user object. You can decide the structure of
-   the user object as you will be the one accessing the data in the user object in the saveAccessToken() method. The library
-   doesn't access the user object it just supplies it to the saveAccessToken() method */
-function getUser(username, password, callback){
+model.saveRefreshToken = function (refreshToken, clientId, expires, userId, callback) {
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
+        client.query('INSERT INTO oauth_refresh_tokens(refresh_token, client_id, user_id, ' +
+            'expires) VALUES ($1, $2, $3, $4)', [refreshToken, clientId, userId, expires],
+            function (err, result) {
+                callback(err);
+                done();
+            });
+    });
+};
 
-    console.log('getUser() called and username is: ', username, ' and password is: ', password, ' and callback is: ', callback, ' and is userDBHelper null is: ', userDBHelper);
-
-    //try and get the user using the user's credentials
-    userDBHelper.getUserFromCrentials(username, password, callback)
-}
-
-/* saves the accessToken along with the userID retrieved the specified user */
-function saveAccessToken(accessToken, clientID, expires, user, callback){
-
-    console.log('saveAccessToken() called and accessToken is: ', accessToken,
-        ' and clientID is: ',clientID, ' and user is: ', user, ' and accessTokensDBhelper is: ', accessTokensDBHelper)
-
-    //save the accessToken along with the user.id
-    accessTokensDBHelper.saveAccessToken(accessToken, user.id, callback)
-}
-
-/* This method is called when a user is using a bearerToken they've already got as authentication
-   i.e. when they're calling APIs. The method effectively serves to validate the bearerToken. A bearerToken
-   has been successfully validated if passing it to the getUserIDFromBearerToken() method returns a userID.
-   It's able to return a userID because each row in the access_tokens table has a userID in it so we can use
-   the bearerToken to query for a row which will have a userID in it.
-   The callback takes 2 parameters:
-   1. A truthy boolean indicating whether or not an error has occured. It should be set to a truthy if
-   there is an error or a falsy if there is no error
-   2. An accessToken which contains an expiration date, you can assign null to ensure the token doesnin't expire.
-  Then either a user object, or a userId which is a string or a number.
-  If you create a user object you can access it in authenticated endpoints in the req.user object.
-  If you create a userId you can access it in authenticated endpoints in the req.user.id object.
+/*
+ * Required to support password grant type
  */
-function getAccessToken(bearerToken, callback) {
-
-    //try and get the userID from the db using the bearerToken
-    accessTokensDBHelper.getUserIDFromBearerToken(bearerToken, (userID) => {
-
-
-        // console.log("\n\n\n");
-        // console.log(callback);
-        // console.log("\n\n\n");
-
-        //create the token using the retrieved userID
-        const accessToken = {
-            user: {
-                id: userID,
-            },
-            expires: null
-        }
-
-        //set the error to true if userID is null, and pass in the token if there is a userID else pass null
-        callback(userID == null ? true : false, userID == null ? null : accessToken)
-    })
-}
+model.getUser = function (username, password, callback) {
+    console.log("(((((((((((((((((((((((((((((((((");
+    console.log(username);
+    console.log(password);
+    pg.connect(connString, function (err, client, done) {
+        if (err) return callback(err);
+        client.query('SELECT id FROM users WHERE email = $1 AND password = $2', [username,
+            password], function (err, result) {
+            console.log(result.rows[0].id);
+            console.log("))))))))))))))))))))))))))))))))))");
+            callback(err, result.rowCount ? result.rows[0].id : false);
+            done();
+        });
+    });
+};
