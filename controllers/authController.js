@@ -34,8 +34,7 @@ exports.login = function (req, res) {
 };
 
 exports.get_user = function (req, res) {
-    var bearer_token = (req.get('Authorization')).replace("Bearer ", "");
-    oauthHelpers.getUserFromBearerToken(bearer_token).then(function(user){
+    oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function(user){
         res.json(user);
     });
 };

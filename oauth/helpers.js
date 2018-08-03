@@ -2,19 +2,14 @@ var db = require('../models');
 
 var getUserIdFromBearerToken = function getUserIdFromBearerToken(token)
 {
-    var query_string = 'SELECT\n' +
-        '  u.id\n' +
-        'FROM\n' +
-        '  oauth_access_tokens T\n' +
-        'LEFT JOIN users u\n' +
-        '    ON u.id = t.user_id\n' +
-        'WHERE\n' +
-        '  access_token=\'' + token + '\'';
-
-    return db.sequelize.query(query_string, {
-        type: db.sequelize.QueryTypes.SELECT
-    }).then(users => {
-        return users[0].id;
+    token = token.replace("Bearer ", "");
+    var Oauth_access_token = db.oauth_access_token;
+    return Oauth_access_token.findOne({
+        where: {
+            'access_token': token
+        }
+    }).then(oauth_access_token => {
+        return oauth_access_token ? oauth_access_token.user_id : null;
     });
 };
 
