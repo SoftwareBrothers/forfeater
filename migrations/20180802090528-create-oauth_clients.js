@@ -14,7 +14,7 @@ module.exports = {
               allowNull: false,
               type: Sequelize.TEXT
           },
-          redirect_url: {
+          redirect_uri: {
               allowNull: false,
               type: Sequelize.TEXT
           }
