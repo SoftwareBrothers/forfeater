@@ -23,7 +23,9 @@ var getUserFromBearerToken = function getUserFromBearerToken(token)
     return getUserIdFromBearerToken(token).then(function(userId){
         var User = db.user;
         return User.findOne({
-            id: userId,
+            where: {
+                id: userId
+            },
             attributes: {
                 exclude: ['password']
             }
