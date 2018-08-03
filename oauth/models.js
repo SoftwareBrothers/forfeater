@@ -1,27 +1,11 @@
-/**
- * Copyright 2013-present NightWorld.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+var db = require('../models');
+argon2 = require('argon2');
+var User = db.user;
 
 var pg = require('pg'),
     model = module.exports,
     // connString = process.env.DATABASE_URL;
     connString = "pg://postgres:@localhost:5432/forfeaterjs";
-
-/*
- * Required
- */
 
 model.getAccessToken = function (bearerToken, callback) {
     pg.connect(connString, function (err, client, done) {
@@ -55,10 +39,6 @@ model.getClient = function (clientId, clientSecret, callback) {
 
             var client = result.rows[0];
 
-            console.log('-----------------------');
-            console.log(client);
-            console.log('-----------------------');
-
             if (clientSecret !== null && client.client_secret !== clientSecret) return callback();
 
             // This object will be exposed in req.oauth.client
@@ -88,10 +68,6 @@ model.getRefreshToken = function (bearerToken, callback) {
 var authorizedClientIds = ['forfeaterweb'];
 model.grantTypeAllowed = function (clientId, grantType, callback) {
     if (grantType === 'password') {
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-        console.log(clientId.toLowerCase());
-        console.log(authorizedClientIds.indexOf(clientId.toLowerCase()) >= 0);
-        console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
         return callback(false, authorizedClientIds.indexOf(clientId.toLowerCase()) >= 0);
     }
 
@@ -99,11 +75,6 @@ model.grantTypeAllowed = function (clientId, grantType, callback) {
 };
 
 model.saveAccessToken = function (accessToken, clientId, expires, userId, callback) {
-    console.log('^^^^^^^^^^^^^^^^^^^^');
-    console.log(accessToken);
-    console.log(clientId);
-    console.log(userId);
-    console.log(expires);
     pg.connect(connString, function (err, client, done) {
         if (err) return callback(err);
         client.query("INSERT INTO oauth_access_tokens(access_token, client_id, user_id, expires) " +
@@ -131,17 +102,19 @@ model.saveRefreshToken = function (refreshToken, clientId, expires, userId, call
  * Required to support password grant type
  */
 model.getUser = function (username, password, callback) {
-    console.log("(((((((((((((((((((((((((((((((((");
-    console.log(username);
-    console.log(password);
     pg.connect(connString, function (err, client, done) {
         if (err) return callback(err);
-        client.query('SELECT id FROM users WHERE email = $1 AND password = $2', [username,
-            password], function (err, result) {
-            console.log(result.rows[0].id);
-            console.log("))))))))))))))))))))))))))))))))))");
-            callback(err, result.rowCount ? result.rows[0].id : false);
-            done();
+        var user = User.findOne({
+            where: {
+                'email': username
+            }
+        }).then(user => {
+            var dbPass = user.password;
+            argon2.verify(dbPass, password).then(match => {
+                callback(null, match ? user.id : false);
+                done();
+            });
+
         });
     });
 };
