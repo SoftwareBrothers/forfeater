@@ -33,8 +33,8 @@ let rules = {
 var acl = require('../middleware/acl')(rules);
 
 module.exports = function (app) {
-    router.get('/', order_controller.list);
-    router.get('/:id', order_controller.show);
+    router.get('/', app.oauth.authorise(), order_controller.list);
+    router.get('/:id', app.oauth.authorise(), order_controller.show);
     router.post('/', app.oauth.authorise(), acl, order_controller.store);
     router.patch('/:orderId', app.oauth.authorise(), acl, order_controller.update);
     router.delete('/:orderId', app.oauth.authorise(), acl, order_controller.delete);

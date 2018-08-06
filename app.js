@@ -17,8 +17,8 @@ app.oauth = oauthServer({
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var vendorsRouter = require('./routes/vendors');
+var usersRouter = require('./routes/users')(app);
+var vendorsRouter = require('./routes/vendors')(app);
 var ordersRouter = require('./routes/orders')(app);
 var choicesRouter = require('./routes/choices');
 var authRouter = require('./routes/auth')(app);
