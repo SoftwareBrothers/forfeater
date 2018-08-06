@@ -1,6 +1,6 @@
 let rules = {
     user: {
-        denied: [
+        allowed: [
             {
                 method: 'GET',
                 route: '/user'
@@ -8,8 +8,7 @@ let rules = {
         ]
     }
 };
-
-var acl = require('../middleware/acl');
+var acl = require('../middleware/acl')(rules);
 
 module.exports = function (app) {
     var express = require('express');
@@ -18,7 +17,7 @@ module.exports = function (app) {
     var auth_controller = require('../controllers/authController');
 
     router.post('/login', app.oauth.grant(), auth_controller.login);
-    router.get('/user', app.oauth.authorise(), acl(rules), auth_controller.get_user);
+    router.get('/user', app.oauth.authorise(), acl, auth_controller.get_user);
 
     return router;
 };

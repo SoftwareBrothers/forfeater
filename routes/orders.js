@@ -4,9 +4,21 @@ var router = express.Router();
 var order_controller = require('../controllers/orderController');
 var choice_controller = require('../controllers/choiceController');
 
+let rules = {
+    guest: {
+        allowed: [
+            {
+                method: '*',
+                route: '*'
+            }
+        ]
+    }
+};
+var acl = require('../middleware/acl')(rules);
+
 router.get('/', order_controller.list);
 router.get('/:id', order_controller.show);
-router.post('/', order_controller.store);
+router.post('/', acl, order_controller.store);
 router.patch('/:orderId', order_controller.update);
 router.delete('/:orderId', order_controller.delete);
 
