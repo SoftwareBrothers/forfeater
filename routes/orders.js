@@ -6,23 +6,41 @@ var choice_controller = require('../controllers/choiceController');
 
 let rules = {
     guest: {
-        allowed: [
+        denied: [
             {
                 method: '*',
                 route: '*'
             }
         ]
+    },
+    user: {
+        denied: [
+            {
+                method: 'POST',
+                route: '/'
+            },
+            {
+                method: 'PATCH',
+                route: '/:orderId'
+            },
+            {
+                method: 'DELETE',
+                route: '/:orderId'
+            },
+        ]
     }
 };
 var acl = require('../middleware/acl')(rules);
 
-router.get('/', order_controller.list);
-router.get('/:id', order_controller.show);
-router.post('/', acl, order_controller.store);
-router.patch('/:orderId', order_controller.update);
-router.delete('/:orderId', order_controller.delete);
+module.exports = function (app) {
+    router.get('/', order_controller.list);
+    router.get('/:id', order_controller.show);
+    router.post('/', app.oauth.authorise(), acl, order_controller.store);
+    router.patch('/:orderId', app.oauth.authorise(), acl, order_controller.update);
+    router.delete('/:orderId', app.oauth.authorise(), acl, order_controller.delete);
 
-router.put('/:orderId/choices', choice_controller.store);
-router.patch('/:orderId/ratings', choice_controller.store_rating);
+    router.put('/:orderId/choices', app.oauth.authorise(), choice_controller.store);
+    router.patch('/:orderId/ratings', app.oauth.authorise(), choice_controller.store_rating);
 
-module.exports = router;
+    return router;
+};

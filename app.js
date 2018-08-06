@@ -7,12 +7,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var vendorsRouter = require('./routes/vendors');
-var productsRouter = require('./routes/products');
-var ordersRouter = require('./routes/orders');
-var choicesRouter = require('./routes/choices');
 
 var app = express();
 app.oauth = oauthServer({
@@ -22,6 +16,12 @@ app.oauth = oauthServer({
 });
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var vendorsRouter = require('./routes/vendors');
+var productsRouter = require('./routes/products');
+var ordersRouter = require('./routes/orders')(app);
+var choicesRouter = require('./routes/choices');
 var authRouter = require('./routes/auth')(app);
 
 // view engine setup
