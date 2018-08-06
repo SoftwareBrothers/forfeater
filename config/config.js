@@ -7,7 +7,8 @@ const config = {
   database: process.env.DB_NAME || 'forfeaterjs',
   username: process.env.DB_USER || 'forfeater',
   password: process.env.DB_PASS || 'secret',
-  migrationStorageTableName: 'migrations'
+  migrationStorageTableName: 'migrations',
+  timezone: '+02:00'
 }
 
 module.exports = {

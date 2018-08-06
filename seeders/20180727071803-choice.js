@@ -10,22 +10,6 @@ module.exports = {
       comment: 'Delicious!',
       createdAt: new Date(),
       updatedAt: new Date()
-  },{
-    orderId: 1,
-    userId: 2,
-    productId: 1,
-    score: 6,
-    comment: 'It was fine.',
-    createdAt: new Date(),
-    updatedAt: new Date()
-  },{
-    orderId: 2,
-    userId: 1,
-    productId: 1,
-    score: 6,
-    comment: 'ok....',
-    createdAt: new Date(),
-    updatedAt: new Date()
   }], {});
   },
 

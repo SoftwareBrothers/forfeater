@@ -14,9 +14,12 @@ module.exports = {
       firstName: {
         type: Sequelize.STRING
       },
-      lastName: {
-        type: Sequelize.STRING
-      },
+        lastName: {
+            type: Sequelize.STRING
+        },
+        scope: {
+            type: Sequelize.STRING
+        },
       email: {
         type: Sequelize.STRING,
         unique: true

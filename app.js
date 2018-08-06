@@ -2,6 +2,7 @@ require('dotenv').config();
 
 var createError = require('http-errors');
 var express = require('express');
+var oauthServer = require('node-oauth2-server');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -14,6 +15,14 @@ var ordersRouter = require('./routes/orders');
 var choicesRouter = require('./routes/choices');
 
 var app = express();
+app.oauth = oauthServer({
+    model: require('./oauth/models'),
+    grants: ['password'],
+    debug: true
+});
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+var authRouter = require('./routes/auth')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,6 +42,7 @@ app.use(function(req, res, next) {
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/auth', authRouter);
 app.use('/vendors', vendorsRouter);
 app.use('/products', productsRouter);
 app.use('/orders', ordersRouter);
@@ -42,6 +52,8 @@ app.use('/choices', choicesRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+app.use(app.oauth.errorHandler());
 
 // error handler
 app.use(function(err, req, res, next) {
