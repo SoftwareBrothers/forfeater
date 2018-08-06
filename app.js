@@ -28,6 +28,9 @@ var authRouter = require('./routes/auth')(app);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+var addUserToRequest = require('./middleware/addUserToRequest');
+app.use(addUserToRequest);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
