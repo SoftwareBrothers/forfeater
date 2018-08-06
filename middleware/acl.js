@@ -34,18 +34,20 @@ var acl = function acl(rules) {
 
 function verifyAllowed(rules, path, method)
 {
+    let allowed = null;
     rules.forEach(function(rule){
-        if (rule.method === method && rule.route === path) {
-            return true;
+        if ((rule.method === method || '*' === rule.method) && (rule.route === path || '*' === rule.route)) {
+            allowed = true;
         }
     });
+    return allowed;
 }
 
 function verifyDenied(rules, path, method)
 {
     let denied = null;
     for (let rule of rules) {
-        if (rule.method === method && rule.route === path) {
+        if ((rule.method === method || '*' === rule.method) && (rule.route === path || '*' === rule.route)) {
             denied = true;
             break;
         }
