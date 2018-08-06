@@ -3,11 +3,14 @@ var router = express.Router();
 
 var user_controller = require('../controllers/userController');
 
-router.get('/', user_controller.list);
-router.post('/', user_controller.store);
 
-router.get('/:id', user_controller.show);
-router.patch('/:id', user_controller.update);
-router.delete('/:id', user_controller.delete);
+module.exports = function (app) {
+    router.get('/', app.oauth.authorise(), user_controller.list);
+    router.post('/', app.oauth.authorise(), user_controller.store);
 
-module.exports = router;
+    router.get('/:id', app.oauth.authorise(), user_controller.show);
+    router.patch('/:id', app.oauth.authorise(), user_controller.update);
+    router.delete('/:id', app.oauth.authorise(), user_controller.delete);
+
+    return router;
+};

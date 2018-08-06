@@ -4,13 +4,43 @@ var router = express.Router();
 var order_controller = require('../controllers/orderController');
 var choice_controller = require('../controllers/choiceController');
 
-router.get('/', order_controller.list);
-router.get('/:id', order_controller.show);
-router.post('/', order_controller.store);
-router.patch('/:orderId', order_controller.update);
-router.delete('/:orderId', order_controller.delete);
+let rules = {
+    guest: {
+        denied: [
+            {
+                method: '*',
+                route: '*'
+            }
+        ]
+    },
+    user: {
+        denied: [
+            {
+                method: 'POST',
+                route: '/'
+            },
+            {
+                method: 'PATCH',
+                route: '/:orderId'
+            },
+            {
+                method: 'DELETE',
+                route: '/:orderId'
+            },
+        ]
+    }
+};
+var acl = require('../middleware/acl')(rules);
 
-router.put('/:orderId/choices', choice_controller.store);
-router.patch('/:orderId/ratings', choice_controller.store_rating);
+module.exports = function (app) {
+    router.get('/', app.oauth.authorise(), order_controller.list);
+    router.get('/:id', app.oauth.authorise(), order_controller.show);
+    router.post('/', app.oauth.authorise(), acl, order_controller.store);
+    router.patch('/:orderId', app.oauth.authorise(), acl, order_controller.update);
+    router.delete('/:orderId', app.oauth.authorise(), acl, order_controller.delete);
 
-module.exports = router;
+    router.put('/:orderId/choices', app.oauth.authorise(), choice_controller.store);
+    router.patch('/:orderId/ratings', app.oauth.authorise(), choice_controller.store_rating);
+
+    return router;
+};

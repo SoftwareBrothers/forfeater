@@ -7,12 +7,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var vendorsRouter = require('./routes/vendors');
-var productsRouter = require('./routes/products');
-var ordersRouter = require('./routes/orders');
-var choicesRouter = require('./routes/choices');
 
 var app = express();
 app.oauth = oauthServer({
@@ -22,11 +16,19 @@ app.oauth = oauthServer({
 });
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users')(app);
+var vendorsRouter = require('./routes/vendors')(app);
+var ordersRouter = require('./routes/orders')(app);
+var choicesRouter = require('./routes/choices');
 var authRouter = require('./routes/auth')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+var addUserToRequest = require('./middleware/addUserToRequest');
+app.use(addUserToRequest);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -44,7 +46,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/vendors', vendorsRouter);
-app.use('/products', productsRouter);
 app.use('/orders', ordersRouter);
 app.use('/choices', choicesRouter);
 
