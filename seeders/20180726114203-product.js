@@ -18,7 +18,13 @@ module.exports = {
           vendorId: 2,
           createdAt: new Date(),
           updatedAt: new Date()
-      }], {});
+      },
+      {
+        name: 'Hot Chili',
+        vendorId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }], {});
   },
 
   down: (queryInterface, Sequelize) => {

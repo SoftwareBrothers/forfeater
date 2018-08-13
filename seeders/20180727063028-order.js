@@ -13,7 +13,7 @@ module.exports = {
   },{
     vendorId: 1,
     userId: 1,
-    deadlineAt: new Date(),
+    deadlineAt: new Date(today.getTime() + 1000 * 12 * 25 * 24),
     deliveryAt: null,
     createdAt: new Date(),
     updatedAt: new Date()
