@@ -39,6 +39,7 @@ module.exports = function (app) {
     router.patch('/:orderId', app.oauth.authorise(), acl, order_controller.update);
     router.delete('/:orderId', app.oauth.authorise(), acl, order_controller.delete);
 
+    router.get('/:orderId/choices', app.oauth.authorise(), choice_controller.listOfOrder);
     router.put('/:orderId/choices', app.oauth.authorise(), choice_controller.store);
     router.patch('/:orderId/ratings', app.oauth.authorise(), choice_controller.store_rating);
 

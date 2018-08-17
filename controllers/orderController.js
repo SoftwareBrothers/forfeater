@@ -5,6 +5,7 @@ var db = require('../models');
 var Order = db.order;
 var Vendor = db.vendor;
 var User = db.user;
+var Choice = db.choice;
 
 var orderSchema = require('../schemas/orderSchema');
 
@@ -25,8 +26,17 @@ exports.list = function (req, res) {
         }
     }
     Order.findAll({
+        // attributes: { 
+        //     include: ['vendor.*', [db.Sequelize.fn('COUNT', db.Sequelize.col('choices.id')), 'ChoiceCount']]
+        // },
         where: whereConditions,
-        include: [ Vendor, User ] }).then(orders => {
+        // group: ['order.id', 'vendor.id', 'user.id'],
+        // raw: true,
+        include: [ Vendor, User],
+        // include: [ Vendor,{
+        //     model: Choice, attributes: []
+        // } ] 
+    }).then(orders => {
         res.json(orders);
     })
 };

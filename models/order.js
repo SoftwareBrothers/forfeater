@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   order.associate = function(models) {
     order.belongsTo(models.vendor),
-    order.belongsTo(models.user)
+    order.belongsTo(models.user),
+    order.hasMany(models.choice)
   };
   return order;
 };
