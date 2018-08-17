@@ -22,5 +22,8 @@
     "pug": "2.0.0-beta11",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
   }
 }
