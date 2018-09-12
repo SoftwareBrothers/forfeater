@@ -6,9 +6,14 @@ var oauthServer = require('node-oauth2-server');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var Raven = require('raven');
 
 var app = express();
+
+Raven.config(process.env.SENTRY_DSN).install();
+
+app.use(Raven.requestHandler());
+
 app.oauth = oauthServer({
     model: require('./oauth/models'),
     grants: ['password'],
@@ -49,6 +54,8 @@ app.use('/vendors', vendorsRouter);
 app.use('/orders', ordersRouter);
 app.use('/choices', choicesRouter);
 
+app.use(Raven.errorHandler());
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -65,6 +72,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+  res.end(res.sentry + '\n');
 });
 
 module.exports = app;

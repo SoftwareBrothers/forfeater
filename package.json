@@ -21,6 +21,7 @@
     "pg": "^6.4.2",
     "pg-hstore": "^2.3.2",
     "pug": "2.0.0-beta11",
+    "raven": "^2.6.4",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.0.0"
   },
