@@ -58,3 +58,8 @@ Authorization = Bearer
 > `PUT /orders/:orderid/choices`
 #### rate meal afterwards
 > `PATCH /orders/:orderId/ratings`
+#### change password
+> `PUT /users/{id}/password`
+```
+newPassword: newPassword
+```
