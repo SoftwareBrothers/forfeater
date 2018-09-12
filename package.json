@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "apidoc": "^0.17.6",
     "argon2": "^0.19.3",
     "async": "^2.6.1",
     "body-parser": "^1.17.2",
