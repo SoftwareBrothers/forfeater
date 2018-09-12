@@ -35,10 +35,15 @@ module.exports = {
         onUpdate: 'cascade',
         onDelete: 'cascade'
       },
+      orderComment: {
+          allowNull: true,
+          type: Sequelize.STRING
+      },
       score: {
         type: Sequelize.INTEGER
       },
-      comment: {
+      scoreComment: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

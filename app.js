@@ -20,7 +20,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users')(app);
 var vendorsRouter = require('./routes/vendors')(app);
 var ordersRouter = require('./routes/orders')(app);
-var choicesRouter = require('./routes/choices');
+var choicesRouter = require('./routes/choices')(app);
 var authRouter = require('./routes/auth')(app);
 
 // view engine setup

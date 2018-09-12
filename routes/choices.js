@@ -7,4 +7,9 @@ router.get('/', choice_controller.list);
 router.post('/', choice_controller.store)
 router.get('/:id', choice_controller.show);
 
-module.exports = router;
+module.exports = function (app) {
+    router.get('/', choice_controller.list);
+    router.get('/:id', choice_controller.show);
+
+    return router;
+};

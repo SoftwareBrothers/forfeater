@@ -7,7 +7,8 @@ module.exports = {
       userId: 1,
       productId: 1,
       score: 5,
-      comment: 'Delicious!',
+      orderComment: 'No kolendra please',
+      scoreComment: 'Delicious!',
       createdAt: new Date(),
       updatedAt: new Date()
   }], {});

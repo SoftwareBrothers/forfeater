@@ -2,10 +2,11 @@
 module.exports = (sequelize, DataTypes) => {
   var choice = sequelize.define('choice', {
     orderId: DataTypes.INTEGER,
+    orderComment: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     productId: DataTypes.INTEGER,
     score: DataTypes.INTEGER,
-    comment: DataTypes.STRING
+    scoreComment: DataTypes.STRING
   }, {});
   choice.associate = function(models) {
     choice.belongsTo(models.order),
