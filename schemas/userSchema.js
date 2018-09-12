@@ -44,15 +44,15 @@ var update = {
         isLength: {
             errorMessage: 'Role is required',
             options: { min: 1 }
-            },
-        trim: true,
         },
+        trim: true,
+    },
     firstName: {
         in: ['body'],
         isLength: {
             errorMessage: 'First name is required',
             options: { min: 1 }
-            },
+        },
         trim: true
     },
     lastName: {
@@ -60,7 +60,7 @@ var update = {
         isLength: {
             errorMessage: 'Last name is required',
             options: { min: 1 }
-            },
+        },
         trim: true
     },
     email: {
@@ -70,4 +70,15 @@ var update = {
     }
 }
 
-module.exports = {store, update};
+var changePassword = {
+    newPassword: {
+        in: ['body'],
+        isLength: {
+            errorMessage: 'Password is required',
+            options: { min: 1 }
+        },
+        trim: true,
+    }
+}
+
+module.exports = {store, update, changePassword};

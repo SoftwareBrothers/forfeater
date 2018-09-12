@@ -6,6 +6,8 @@ var User = db.user;
 
 var userSchema = require('../schemas/userSchema');
 
+var oauthHelpers = require('../oauth/helpers');
+
 exports.list = function (req, res) {
     User.findAll().then(users => {
         res.json(users);
@@ -17,6 +19,8 @@ exports.show = function (req, res) {
         res.json(user);
     })
 };
+
+const argon2 = require("argon2");
 
 exports.store =  [
 
@@ -56,7 +60,7 @@ exports.store =  [
 ];
 
 exports.update = [
-    
+
     checkSchema(userSchema.update),
 
     function (req, res) {
@@ -83,6 +87,35 @@ exports.update = [
             })
 
         }
+    }
+]
+
+exports.changePassword = [
+
+    checkSchema(userSchema.changePassword),
+
+    function (req, res) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(422).json({ status: 'fail', errors: errors.array() });
+        } else {
+            oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function(loggedUser){
+                User.findOne({ where: {'id': req.params.id}}).then(changedUser => {
+                    if (loggedUser.role !== 'admin' && req.params.id !== loggedUser.id.toString()) {
+                        res.status(401).json({ success: false, message: "Can't change password for this user" })
+                    } else {
+                        argon2
+                            .hash(req.body.newPassword)
+                            .then(hash => {
+                                changedUser.password = hash;
+                                changedUser.save();
+                                res.status(200).json({ status: 'success', message: "Password changed" });
+                            });
+                    }
+                });
+            })
+        }
+
     }
 ]
 

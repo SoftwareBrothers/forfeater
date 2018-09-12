@@ -9,6 +9,7 @@ module.exports = function (app) {
     router.post('/', app.oauth.authorise(), user_controller.store);
 
     router.get('/:id', app.oauth.authorise(), user_controller.show);
+    router.put('/:id/password', app.oauth.authorise(), user_controller.changePassword);
     router.patch('/:id', app.oauth.authorise(), user_controller.update);
     router.delete('/:id', app.oauth.authorise(), user_controller.delete);
 
