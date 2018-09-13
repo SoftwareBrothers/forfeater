@@ -83,7 +83,28 @@ module.exports = function (app) {
      */
     router.delete('/:vendorId', app.oauth.authorise(), vendor_controller.delete);
 
+    /**
+     * @api {get} /vendors/:vendorId/products list
+     *
+     * @apiDescription Get all products of vendor
+     * 
+     * @apiName list
+     * @apiGroup Product
+     * 
+     * @apiHeader {string} Authorization Bearer
+     */
     router.get('/:vendorId/products', app.oauth.authorise(), product_controller.list);
+
+    /**
+     * @api {get} /vendors/:vendorId/products/:productId show
+     *
+     * @apiDescription Get product
+     * 
+     * @apiName show
+     * @apiGroup Product
+     * 
+     * @apiHeader {string} Authorization Bearer
+     */
     router.get('/:vendorId/products/:productId', app.oauth.authorise(), product_controller.show);
     router.post('/:vendorId/products', app.oauth.authorise(), product_controller.store);
     router.patch('/:vendorId/products/:productId', app.oauth.authorise(), product_controller.update);

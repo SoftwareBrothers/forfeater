@@ -66,8 +66,49 @@ module.exports = function (app) {
      * @apiSuccess {DateTime} updatedAt UpdatedAt
      */
     router.get('/:id', app.oauth.authorise(), user_controller.show);
+
+    /**
+     * @api {put} /users/:id/password change password
+     *
+     * @apiDescription Change user's password
+     * 
+     * @apiName change password
+     * @apiGroup User
+     * 
+     * @apiHeader {string} Authorization Bearer
+     * 
+     * @apiParam {String} newPassword new password
+     */
     router.put('/:id/password', app.oauth.authorise(), user_controller.changePassword);
+
+    /**
+     * @api {patch} /users/:id update
+     *
+     * @apiDescription Update user
+     * 
+     * @apiName update
+     * @apiGroup User
+     * 
+     * @apiHeader {string} Authorization Bearer
+     * 
+     * @apiParam {String} role Role name
+     * @apiParam {String} firstName first name
+     * @apiParam {String} lastName last name
+     * @apiParam {String} [email] Email
+     */
     router.patch('/:id', app.oauth.authorise(), user_controller.update);
+
+    /**
+     * @api {delete} /users/:id delete
+     *
+     * @apiDescription Delete user
+     * 
+     * @apiName delete
+     * @apiGroup User
+     * 
+     * @apiHeader {string} Authorization Bearer
+     * 
+     */
     router.delete('/:id', app.oauth.authorise(), user_controller.delete);
 
     return router;
