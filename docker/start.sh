@@ -3,7 +3,8 @@
 npm run build
 
 if [ "$NODE_ENV" == "production" ] ; then
-  npm run start
+  npm start
 else
-  npm run dev
+  npm start
+  # nodemon DEBUG=forfeater:* npm start
 fi

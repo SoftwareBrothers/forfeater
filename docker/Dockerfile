@@ -10,6 +10,4 @@ RUN apk add --no-cache --virtual .gyp \
     && npm install \
     && apk del .gyp
 
-CMD ./start.sh
-
-EXPOSE 3000
+CMD ./docker/start.sh
