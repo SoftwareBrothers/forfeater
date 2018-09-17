@@ -1,5 +1,5 @@
 run-database:
-	docker run --name forfeater_db --rm -it -p 5432:5432 postgres:10
+	docker run --name forfeater_db -it -p 5432:5432 postgres:10
 
 run-test:
 	npm run test
