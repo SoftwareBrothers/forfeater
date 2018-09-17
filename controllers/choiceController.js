@@ -124,3 +124,46 @@ exports.store =  [
         }
     }
 ];
+
+exports.delete = (req, res) => {
+
+    oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function(loggedUser){
+        Choice.findOne({ where: {'id': req.params.choiceId }})
+        .then(choice => {
+            if(loggedUser.role != 'admin') {
+                if(loggedUser.id != choice.user_id) {
+                    res.status(403).json({status: 'error', errors: 'You can not remove not own choice!'});
+                }
+
+                var deadline = new Date(choice.order.deadlineAt);
+                var date = new Date();
+                var dateDiff = deadline - date;
+                if (dateDiff < 0) {
+                    res.status(403).json({status: 'error', errors: 'Time for voting has passed'});
+                    return;
+                }
+            }
+
+            Choice.destroy({
+                where: {
+                    id: req.params.choiceId
+                }
+            }).then(function (deletedRecord) {
+                if (deletedRecord === 1) {
+                    res.status(200).json({ success: true, message: "Deleted successfully" });
+                }
+            }).catch(function (error) {
+                res.status(500).json({ 'error': error });
+            });
+
+        }).catch(function (error) {
+            if (error instanceof db.Sequelize.EmptyResultError) {
+                res.status(404).json({status: 'error', error: error.message});
+            } else {
+                res.status(500).json({status: 'error', error: error.message});
+            }
+        });
+
+    });
+
+}

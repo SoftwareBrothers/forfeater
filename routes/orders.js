@@ -129,6 +129,19 @@ module.exports = function (app) {
     router.put('/:orderId/choices', app.oauth.authorise(), choice_controller.store);
 
     /**
+     * @api {delete} /orders/:orderId/choices/:choiceId delete
+     *
+     * @apiDescription Delete choice
+     * 
+     * @apiName delete
+     * @apiGroup Choice
+     * 
+     * @apiHeader {string} Authorization Bearer
+     * 
+     */
+    router.delete('/:orderId/choices/:choiceId', app.oauth.authorise(), choice_controller.delete);
+
+    /**
      * @api {patch} /orders/:orderId/ratings rate
      *
      * @apiDescription Rate choice
