@@ -13,5 +13,7 @@ services:
       - "9229:9229"
   postgres:
     image: postgres:9.6.8-alpine
-    environment:
-      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env

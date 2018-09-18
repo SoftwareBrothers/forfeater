@@ -24,7 +24,16 @@ module.exports = {
     deliveryAt: null,
     createdAt: new Date(),
     updatedAt: new Date()
-  }], {});
+  },
+  {
+    vendorId: 3,
+    userId: 5,
+    deadlineAt: new Date(2018, 8, 18, 12, 30, 0, 0),
+    deliveryAt: new Date(2018, 8, 19, 10, 30, 0, 0),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+], {});
   },
 
   down: (queryInterface, Sequelize) => {
