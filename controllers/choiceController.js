@@ -37,6 +37,7 @@ exports.showFromOrder = [
 
         oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function (loggedUser) {
             Choice.findOne({
+                include: [ Order, Product ],
                 where: {
                     'orderId': req.params.orderId,
                     'userId': loggedUser.id
