@@ -73,6 +73,7 @@ exports.store_rating =  [
         } else {
             oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function(loggedUser){
                 Choice.findOne({
+                    include: [ Order, Product ],
                     where: {
                         'userId': loggedUser.id,
                         'orderId': req.params.orderId,
