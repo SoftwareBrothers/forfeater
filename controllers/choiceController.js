@@ -31,6 +31,34 @@ exports.show = function (req, res) {
     })
 }
 
+exports.showFromOrder = [
+
+    (req, res, next) => {
+
+        oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function (loggedUser) {
+            Choice.findOne({
+                where: {
+                    'orderId': req.params.orderId,
+                    'userId': loggedUser.id
+                }
+            }).then(choice => {
+
+                if (null === choice) {
+                    res.status(404).json({status: 'error', error: 'No choice for given data'});
+                }
+
+                res.status(200).json(choice);
+
+            }).catch(function (error) {
+
+                res.status(500).json({status: 'error', error: error.message});
+
+            });
+        });
+
+    }
+];
+
 exports.store_rating =  [
 
     checkSchema(choiceSchema.store_rating),

@@ -114,6 +114,19 @@ module.exports = function (app) {
     router.get('/:orderId/choices', app.oauth.authorise(), choice_controller.listOfOrder);
 
     /**
+     * @api {get} /orders/:orderId/choice show
+     *
+     * @apiDescription Get user's choice from an order
+     *
+     * @apiName show
+     * @apiGroup Choice
+     *
+     * @apiHeader {string} Authorization Bearer
+     *
+     */
+    router.get('/:orderId/choice', app.oauth.authorise(), choice_controller.showFromOrder);
+
+    /**
      * @api {put} /orders/:orderId/choices store
      *
      * @apiDescription Create choice
