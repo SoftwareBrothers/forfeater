@@ -79,10 +79,12 @@ model.getUser = function (username, password, callback) {
             'email': username
         }
     }).then(user => {
-        var dbPass = user.password;
-        argon2.verify(dbPass, password).then(match => {
-            callback(null, match ? user.id : false);
-        });
+        if (user) {
+            argon2.verify(dbPass, password).then(match => {
+                callback(null, match ? user.id : false);
+            });
+        }
+        callback(false, false);
     });
 };
 
