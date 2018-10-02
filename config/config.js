@@ -4,9 +4,9 @@ const config = {
   dialect: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'forfeaterjs',
-  username: process.env.DB_USER || 'forfeater',
-  password: process.env.DB_PASS || 'secret',
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
   migrationStorageTableName: 'migrations',
   timezone: '+02:00'
 }
