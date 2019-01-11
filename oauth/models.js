@@ -80,6 +80,7 @@ model.getUser = function (username, password, callback) {
         }
     }).then(user => {
         if (user) {
+            var dbPass = user.password;
             argon2.verify(dbPass, password).then(match => {
                 callback(null, match ? user.id : false);
             });

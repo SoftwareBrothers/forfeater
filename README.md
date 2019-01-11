@@ -1,6 +1,7 @@
 Example how to set up DB on localhost:
 ```
 make run-database
+docker exec -it forfeater_db bash
 psql -U postgres -h localhost
 CREATE DATABASE forfeaterjs;
 CREATE USER forfeater WITH PASSWORD 'secret';
