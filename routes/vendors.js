@@ -108,6 +108,7 @@ module.exports = function (app) {
    */
   router.get('/:vendorId/products/:productId', app.oauth.authorise(), product_controller.show);
   router.post('/:vendorId/products', app.oauth.authorise(), product_controller.store);
+  router.post('/:vendorId/products/many', app.oauth.authorise(), product_controller.storeMany);
   router.patch('/:vendorId/products/:productId', app.oauth.authorise(), product_controller.update);
   router.delete('/:vendorId/products/:productId', app.oauth.authorise(), product_controller.delete);
 

@@ -102,6 +102,43 @@ exports.store = [
     }
 ]
 
+exports.storeMany = [
+
+    (req, res, next) => {
+
+        req.body.forEach(function (product, index) {
+
+            let model = new Product(
+                { name: product.name, vendorId: req.params.vendorId, active: product.active }
+            );
+
+            Product.findOne({ where: { 'name': model.name } })
+                .then(found_model => {
+                    if (!found_model) {
+
+                        model.save()
+                            .then(() => {
+                                console.log(model.name + ' added!');
+                            })
+                            .catch(function (err) {
+                                if (err instanceof db.Sequelize.ForeignKeyConstraintError) {
+                                    res.status(501).json({ status: 'error', error: err.message });
+                                } else {
+                                    res.status(500).json({ status: 'error', error: err.message });
+                                }
+                                console.error(err);
+                            })
+                    }
+                });
+
+        });
+
+        res.status(201).json();
+
+    }
+
+]
+
 exports.update = [
 
     checkSchema(productSchema.update),
