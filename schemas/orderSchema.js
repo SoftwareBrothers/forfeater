@@ -10,7 +10,7 @@ var store = {
     userId: {
         in: ['body'],
         isLength: {
-            errorMessage: 'Used id is required',
+            errorMessage: 'User id is required',
             options: { min: 1 }
         },
         trim: true
@@ -37,7 +37,7 @@ var update = {
     userId: {
         in: ['body'],
         isLength: {
-            errorMessage: 'Used id is required',
+            errorMessage: 'User id is required',
             options: { min: 1 }
         },
         trim: true
