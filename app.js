@@ -10,7 +10,9 @@ var Raven = require('raven');
 
 var app = express();
 
-Raven.config(process.env.SENTRY_DSN).install();
+if (process.env.SENTRY_DSN !== undefined){
+    Raven.config(process.env.SENTRY_DSN).install();
+}
 
 app.use(Raven.requestHandler());
 
