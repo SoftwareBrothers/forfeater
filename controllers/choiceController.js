@@ -35,8 +35,8 @@ exports.listOfProduct = function (req, res) {
 };
 
 exports.show = function (req, res) {
-    Choice.findById(req.params.id, { include: [ Order, User, Product ] }).then(product => {
-        res.json(product);
+    Choice.findById(req.params.id, { include: [ Order, User, Product ] }).then(choice => {
+        res.json(choice);
     })
 }
 
@@ -124,15 +124,15 @@ exports.store =  [
         } else {
             oauthHelpers.getUserFromBearerToken(req.get('Authorization')).then(function(loggedUser){
                 Order.findOne({ where: {'id': model.orderId }}).then(order => {
-                    var deadline = new Date(order.deadlineAt);
-                    var date = new Date();
-                    var dateDiff = deadline - date;
-                    if (dateDiff < 0) {
+                    let deadline = new Date(order.deadlineAt);
+                    let date = new Date();
+                    let dateDiff = deadline - date;
+                    if (dateDiff < 0 && loggedUser.role !== 'admin') {
                         res.status(403).json({status: 'error', errors: 'Time for voting has passed'});
                         return;
                     }
 
-                    var userId = loggedUser.id;
+                    let userId = loggedUser.id;
                     if (loggedUser.role === 'admin' && req.body.userId !== undefined) {
                         userId = req.body.userId;
                     }
