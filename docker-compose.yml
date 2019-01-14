@@ -2,18 +2,30 @@
 version: "3"
 services:
   app:
-    container_name: forfeater-nodejs
+    container_name: ${APP_NAME}-app
     build:
       dockerfile: ./docker/Dockerfile
       context: .
-    depends_on:
-      - postgres
+    links:
+      - db
     ports:
-      - "3000:3000"
-      - "9229:9229"
-  postgres:
-    image: postgres:9.6.8-alpine
-    ports:
-      - "5432:5432"
+      - 3000:3000
+      - 9229:9229
     env_file:
       - ./.env
+  db:
+    container_name: ${APP_NAME}-db
+    image: postgres:9.6.8-alpine
+    ports:
+      - 5432:5432
+    env_file:
+      - ./.env
+
+  adminer:
+    container_name: ${APP_NAME}-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - db
