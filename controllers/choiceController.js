@@ -35,8 +35,8 @@ exports.listOfProduct = function (req, res) {
 };
 
 exports.show = function (req, res) {
-    Choice.findById(req.params.id, { include: [ Order, User, Product ] }).then(product => {
-        res.json(product);
+    Choice.findById(req.params.id, { include: [ Order, User, Product ] }).then(choice => {
+        res.json(choice);
     })
 }
 
