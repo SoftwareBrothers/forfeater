@@ -74,16 +74,16 @@ model.saveAccessToken = function (accessToken, clientId, expires, userId, callba
  * Required to support password grant type
  */
 model.getUser = function (username, password, callback) {
-    var user = User.findOne({
-        where: {
-            'email': username
-        }
-    }).then(user => {
-        var dbPass = user.password;
-        argon2.verify(dbPass, password).then(match => {
-            callback(null, match ? user.id : false);
+    User.findOne({where: {'email': username}})
+        .then(user => {
+            if (user === null) {
+                callback(null, false);
+            }
+            const dbPass = user.password;
+            argon2.verify(dbPass, password).then(match => {
+                callback(null, match ? user.id : false);
+            });
         });
-    });
 };
 
 // not used in password grant
