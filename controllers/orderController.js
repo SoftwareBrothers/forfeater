@@ -1,5 +1,6 @@
 const { checkSchema, body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const Sequelize = require('sequelize')
 
 var db = require('../models');
 var Order = db.order;
@@ -9,7 +10,6 @@ var Choice = db.choice;
 
 var orderSchema = require('../schemas/orderSchema');
 
-var Sequelize = db.Sequelize;
 const Op = Sequelize.Op;
 
 exports.list = function (req, res) {
