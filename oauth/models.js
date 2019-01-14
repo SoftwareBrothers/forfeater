@@ -55,10 +55,6 @@ model.grantTypeAllowed = function (clientId, grantType, callback) {
 };
 
 model.saveAccessToken = function (accessToken, clientId, expires, userId, callback) {
-    console.log('============================');
-    console.log(expires);
-    console.log(new Date().getTimezoneOffset());
-    console.log('============================');
 
     var access_token = new Oauth_access_token({
         access_token: accessToken,
@@ -74,20 +70,16 @@ model.saveAccessToken = function (accessToken, clientId, expires, userId, callba
  * Required to support password grant type
  */
 model.getUser = function (username, password, callback) {
-    var user = User.findOne({
-        where: {
-            'email': username
-        }
-    }).then(user => {
-        if (user) {
-            var dbPass = user.password;
+    User.findOne({where: {'email': username}})
+        .then(user => {
+            if (user === null) {
+                callback(null, false);
+            }
+            const dbPass = user.password;
             argon2.verify(dbPass, password).then(match => {
                 callback(null, match ? user.id : false);
             });
-        } else {
-            callback(false, false);
-        }
-    });
+        });
 };
 
 // not used in password grant
