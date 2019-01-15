@@ -1,14 +1,15 @@
 'use strict';
 
+require('dotenv').config();
+
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
 var basename = path.basename(__filename);
 var env = process.env.NODE_ENV || 'production';
-var config = require('../config/config.js')[env];
 var db = {};
 
-var sequelize = new Sequelize(config);
+var sequelize = new Sequelize(process.env.DATABASE_URL);
 
 // sequelize
   // .authenticate()

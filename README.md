@@ -1,16 +1,15 @@
-Example how to set up DB on localhost:
-```
-make run-database
-docker exec -it forfeater_db bash
-psql -U postgres -h localhost
-CREATE DATABASE forfeaterjs;
-CREATE USER forfeater WITH PASSWORD 'secret';
-GRANT ALL PRIVILEGES ON DATABASE forfeaterjs TO forfeater;
-```
+# How to run application
 
-# forfeater flow:
+1. start application: `docker-compose up --build`
+2. visit: `locahost:3000`
 
-# ALL:
+Migrations:
+run `make migrate`
+
+Load seeds: 
+run `make seeds`
+
+# App flow:
 #### get access token
 > `POST /auth/login`
 ```
@@ -36,7 +35,7 @@ make api-doc
 
 ## License
 
-forefeater is Copyright © 2018 SoftwareBrothers.co. It is free software, and may be redistributed under the terms specified in the [LICENSE](LICENSE) file.
+forefeater is Copyright © 2019 SoftwareBrothers.co. It is free software, and may be redistributed under the terms specified in the [LICENSE](LICENSE) file.
 
 ## About SoftwareBrothers.co
 

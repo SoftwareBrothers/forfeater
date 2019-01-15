@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha ./tests --timeout 10000"
+    "test": "mocha ./tests --timeout 10000",
+    "doc": "node_modules/.bin/apidoc -i routes/ -o public/doc/"
   },
   "dependencies": {
     "apidoc": "^0.17.6",
