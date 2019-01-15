@@ -13,6 +13,7 @@ services:
       - 9229:9229
     env_file:
       - ./.env
+      
   db:
     container_name: ${APP_NAME}-db
     image: postgres:9.6.8-alpine
@@ -26,6 +27,6 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8081:8080
     links:
       - db

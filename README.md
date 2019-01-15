@@ -4,13 +4,10 @@
 2. visit: `locahost:3000`
 
 Migrations:
-1. run container terminal: `docker exec -it forfeater-app sh`
-2. run `make migrate`
+run `make migrate`
 
 Load seeds: 
-1. run container terminal: `docker exec -it forfeater-app sh`
-2. run `make seeds`
-
+run `make seeds`
 
 # App flow:
 #### get access token
