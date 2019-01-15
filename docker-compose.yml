@@ -13,7 +13,7 @@ services:
       - 9229:9229
     env_file:
       - ./.env
-      
+
   db:
     container_name: ${APP_NAME}-db
     image: postgres:9.6.8-alpine
@@ -30,3 +30,5 @@ services:
       - 8081:8080
     links:
       - db
+    volumes:
+      - ./docker/adminer/adminer.css:/var/www/html/adminer.css
