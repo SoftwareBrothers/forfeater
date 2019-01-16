@@ -1,7 +1,5 @@
 #!/bin/sh
 
-npm install
-
 if [ "$NODE_ENV" == "production" ] ; then
   npm start
 else

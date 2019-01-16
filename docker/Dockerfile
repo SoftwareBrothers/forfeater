@@ -3,8 +3,11 @@ EXPOSE 3000 9229
 COPY . /home/app
 WORKDIR /home/app
 
-RUN apk add --no-cache --virtual .build-deps gcc g++ python \
- && apk add make \
- && apk del .build-deps
+RUN apk --no-cache --virtual build-dependencies add \
+   python \
+   make \
+   g++ \
+   && npm install \
+   && apk del build-dependencies
 
 CMD ./docker/start.sh
