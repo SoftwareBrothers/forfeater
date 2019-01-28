@@ -63,7 +63,7 @@ exports.store =  [
               vendorId: req.body.vendorId, 
               userId: req.body.userId, 
               deadlineAt: req.body.deadlineAt, 
-              deliveryAt: req.body.deliveryAt 
+              deliveryAt: req.body.deliveryAt ? req.body.deliveryAt : null
             }
         );
 
@@ -93,12 +93,12 @@ exports.update = [
     checkSchema(orderSchema.update),
 
     function (req, res) {
+        req.body.deliveryAt = req.body.deliveryAt ? req.body.deliveryAt : null;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             res.status(422).json({ status: 'fail', errors: errors.array() });
         } else {
-            model = new Order(req.body)
-            console.log(req.body)
+            let model = new Order(req.body);
             Order.update(
                 req.body,
                 { where: { id: req.params.orderId } }
