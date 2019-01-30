@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+var cors = require("cors");
 var createError = require("http-errors");
 var express = require("express");
 var oauthServer = require("node-oauth2-server");
@@ -9,6 +10,8 @@ var logger = require("morgan");
 var Raven = require("raven");
 
 var app = express();
+
+app.use(cors());
 
 if (process.env.SENTRY_DSN !== undefined) {
   Raven.config(process.env.SENTRY_DSN).install();
