@@ -10,8 +10,10 @@ var logger = require("morgan");
 var Raven = require("raven");
 
 var app = express();
-
-app.use(cors());
+const options = {
+  origin: "http://localhost:8080"
+};
+app.use(cors(options));
 
 if (process.env.SENTRY_DSN !== undefined) {
   Raven.config(process.env.SENTRY_DSN).install();
