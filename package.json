@@ -8,6 +8,9 @@
     "doc": "node_modules/.bin/apidoc -i routes/ -o public/doc/"
   },
   "dependencies": {
+    "admin-bro": "^0.5.0",
+    "admin-bro-expressjs": "^0.1.5",
+    "admin-bro-sequelizejs": "^0.1.9",
     "apidoc": "^0.17.6",
     "argon2": "^0.19.3",
     "async": "^2.6.1",

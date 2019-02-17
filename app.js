@@ -7,8 +7,11 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var Raven = require("raven");
+var admin = require("./admin")
 
 var app = express();
+
+admin.init(app).then(() => console.log('AdminBro initialized, visit http://localhost:3000/admin'));
 
 if (process.env.SENTRY_DSN !== undefined) {
   Raven.config(process.env.SENTRY_DSN).install();
