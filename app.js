@@ -10,10 +10,19 @@ var logger = require("morgan");
 var Raven = require("raven");
 
 var app = express();
-const options = {
-  origin: "http://localhost:8080"
-};
-app.use(cors(options));
+
+var whitelist = ['http://localhost:8080', process.env.FRONT_URL]
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+
+app.use(cors(corsOptions));
 
 if (process.env.SENTRY_DSN !== undefined) {
   Raven.config(process.env.SENTRY_DSN).install();
