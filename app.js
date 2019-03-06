@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+var cors = require("cors");
 var createError = require("http-errors");
 var express = require("express");
 var oauthServer = require("node-oauth2-server");
@@ -9,6 +10,19 @@ var logger = require("morgan");
 var Raven = require("raven");
 
 var app = express();
+
+var whitelist = ['http://localhost:8080', process.env.FRONT_URL]
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+
+app.use(cors(corsOptions));
 
 if (process.env.SENTRY_DSN !== undefined) {
   Raven.config(process.env.SENTRY_DSN).install();
