@@ -11,16 +11,18 @@ var Raven = require("raven");
 
 var app = express();
 
-var whitelist = ['http://localhost:8080', process.env.FRONT_URL]
-var corsOptions = {
-    origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
-            callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
-    }
+var whitelist = [process.env.FRONT_URL];
+if (process.env.NODE_ENV === "development") {
+  whitelist.push("http://localhost:8080");
 }
+var corsOptions = {
+  origin: function(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  }
+};
 
 app.use(cors(corsOptions));
 
