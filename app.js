@@ -57,11 +57,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(Raven.errorHandler());
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
 app.use(app.oauth.errorHandler());
 
 app.use(function(req, res, next) {
@@ -98,5 +93,10 @@ app.use("/auth", authRouter);
 app.use("/vendors", vendorsRouter);
 app.use("/orders", ordersRouter);
 app.use("/choices", choicesRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
 
 module.exports = app;
