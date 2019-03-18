@@ -18,9 +18,9 @@ if (process.env.NODE_ENV === "development") {
 var corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
-      return callback(null, true);
+      callback(null, true);
     }
-    return callback(new Error("Not allowed by CORS"));
+    callback(new Error("Not allowed by CORS"));
   }
 };
 
@@ -56,12 +56,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
-  next();
+  if(req.method === 'OPTIONS') {
+    res.end();
+  } else {
+    next();
+  }
 });
 
 app.use("/", indexRouter);
