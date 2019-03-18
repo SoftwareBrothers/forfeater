@@ -18,9 +18,9 @@ if (process.env.NODE_ENV === "development") {
 var corsOptions = {
   origin: function(origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
+      return callback(null, true);
     }
-    callback(new Error("Not allowed by CORS"));
+    return callback(new Error("Not allowed by CORS"));
   }
 };
 
@@ -54,6 +54,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use(Raven.errorHandler());
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+app.use(app.oauth.errorHandler());
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
@@ -68,34 +78,25 @@ app.use(function(req, res, next) {
   }
 });
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/auth", authRouter);
-app.use("/vendors", vendorsRouter);
-app.use("/orders", ordersRouter);
-app.use("/choices", choicesRouter);
-
-app.use(Raven.errorHandler());
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-app.use(app.oauth.errorHandler());
-
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
-  res.status(err.status || 500);
-  res.json({
+  res.status(err.status || 500)
+    .json({
     message: err.message,
     error: err
-  });
-  res.end(res.sentry + "\n");
+  })
+    .end(res.sentry + "\n");
 });
+
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/auth", authRouter);
+app.use("/vendors", vendorsRouter);
+app.use("/orders", ordersRouter);
+app.use("/choices", choicesRouter);
 
 module.exports = app;
