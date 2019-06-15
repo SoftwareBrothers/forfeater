@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  db:
+    image: mongo:latest
+    container_name: ${APP_NAME}-db
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ./docker/db:/data/db
+    ports:
+      - 27017:27017
+
+  node:
+    container_name: ${APP_NAME}-app
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    restart: always
+    links:
+      - db
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      WAIT_HOSTS: db:27017
+
+  nginx:
+    build:
+      context: ./docker/nginx/
+      dockerfile: Dockerfile
+    container_name: ${APP_NAME}-nginx
+    env_file:
+      - .env
+    volumes:
+      - ./docker/logs/nginx/:/var/log/nginx
+    depends_on:
+      - db
+      - node
+    ports:
+      - 80:80

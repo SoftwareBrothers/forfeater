@@ -1,0 +1,38 @@
+  upstream ui {
+    server ${APP_NAME}-app:3000;
+  }
+
+  server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    client_max_body_size 10M;
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_min_length 2048;
+    gzip_types
+    application/javascript
+    text/plain
+    text/css
+    application/json
+    application/x-javascript
+    application/xml
+    application/xml+rss
+    text/javascript
+    application/vnd.ms-fontobject
+    application/x-font-ttf
+    font/opentype
+    image/svg+xml
+    image/x-icon;
+
+    location / {
+    proxy_pass http://ui/;
+    }
+
+    error_log /var/log/nginx/app_error.log;
+    access_log /var/log/nginx/app_access.log;
+  }
