@@ -1,14 +1,14 @@
 FROM node:latest
 RUN npm install -g yarn
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+RUN mkdir -p /home/node/app/node_modules
 
 WORKDIR /home/node/app
-COPY package*.json ./
-USER node
+COPY package.json /home/node/app/
+COPY yarn.lock /home/node/app/
 
 RUN yarn install
 
-COPY --chown=node:node . .
+COPY . .
 
 EXPOSE 3000
 
