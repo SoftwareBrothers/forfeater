@@ -1,15 +1,14 @@
 version: '3.7'
 services:
   db:
-    image: mongo:latest
     container_name: ${APP_NAME}-db
+    image: postgres:latest
     restart: always
-    env_file:
-      - .env
-    volumes:
-      - ./docker/db:/data/db
+    env_file: .env
     ports:
-      - 27017:27017
+      - 5432:5432
+    volumes:
+      - ./docker/db:/var/lib/postgresql/data
 
   node:
     container_name: ${APP_NAME}-app
@@ -22,14 +21,10 @@ services:
       - /home/node/app/node_modules
     links:
       - db
-    ports:
-      - 3000:3000
-    depends_on:
-      - db
     env_file:
       - .env
     environment:
-      WAIT_HOSTS: db:27017
+      WAIT_HOSTS: db:5432
 
   nginx:
     build:
