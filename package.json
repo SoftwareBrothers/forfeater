@@ -10,7 +10,7 @@
   "dependencies": {
     "apidoc": "^0.17.7",
     "argon2": "^0.19.3",
-    "async": "^2.6.1",
+    "async": "^2.6.4",
     "body-parser": "^1.17.2",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.5",
